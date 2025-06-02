@@ -5,7 +5,7 @@
 * **기간** : 2025.03.01 ~
 * **소개** : <br><br>&nbsp;&nbsp;**SeSAC_LINK**는 청년취업사관학교 **SeSAC**에서 필요한 **공지사항, QnA, 상담 및 시설 예약, 채용 정보** **등을 제공**하는 **학생 지원 플랫폼**입니다.<br><br>
   청년취업사관학교 **SeSAC**에서 교육을 받는 동안, 위와 같은 서비스가 **여러 플랫폼에 분산**되어 있어 **불편함**을 느꼈습니다.<br><br>이러한 **문제를 해결**하고자, 모든 서비스를 **하나의 웹 사이트에서 제공**함으로써 **학생들에게 편의성을 제공**하자는 취지로 시작한 개인 프로젝트입니다.
-  
+<br>
 ---
 ## 프로젝트 기술스택
 <table width="100%">
@@ -30,15 +30,11 @@
     <td>Log4j2 (레벨별 파일 저장)</td>
   </tr>
 </table>
-
----
-## 프로젝트 관련 문서
-<a href="https://drive.google.com/drive/folders/1mow5Jv0tT8diF5WH87cK6Nr2qDZDVT8n?usp=sharing" style="text-decoration: none;">문서 목록 보러가기</a>
-
+<br>
 ---
 ## ERD
-![erd](https://github.com/user-attachments/assets/d30ee9c6-7502-4796-81ac-d7fb0b97857f)
-
+![erd](https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596)
+<br>
 ---
 ## 주요 기능
 ### 기능 미리보기
