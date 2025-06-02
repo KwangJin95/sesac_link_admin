@@ -1,4 +1,4 @@
-# SeSAC LINK _ (학생 지원 플랫폼)
+# SeSAC LINK (학생 지원 플랫폼)
 
 
 * **이름** : SeSAC LINK
@@ -11,16 +11,22 @@
 <table>
   <tr>
     <td width="10%">**Backend**</td>
-    <td width="10%">**Database**</td>
-    <td width="10%">**Frontend**</td>
-    <td width="10%">**DevOps**</td>
-    <td width="10%">**Logging**</td>
+    <td>Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
   </tr>
   <tr>
-    <td>Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
+    <td width="10%">**Database**</td>
     <td>AWS RDS (MySQL)</td>
+  </tr>
+  <tr>
+    <td width="10%">**Frontend**</td>
     <td>HTML5, CSS3, JavaScript, Thymeleaf, Tailwind CSS</td>
+  </tr>
+  <tr>
+    <td width="10%">**DevOps**</td>
     <td>AWS EC2, RDS, S3, Git</td>
+  </tr>
+  <tr>
+    <td width="10%">**Logging**</td>
     <td>Log4j2 (레벨별 파일 저장)</td>
   </tr>
 </table>
