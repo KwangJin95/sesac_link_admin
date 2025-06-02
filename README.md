@@ -39,32 +39,30 @@
 
 ---
 ## 주요 기능
-### 기능 미리보기
-#### ‼️내가 구현한 기능
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td width="10%"><b>채널<br>목록<br>및<br>상세<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/5c696485-3922-45c1-8363-5c6bda616594"></td>
-    <td width="10%"><b>채널<br>콘텐츠</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/56720694-194b-4b56-bbe6-c617208140ca"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>채널<br>분석</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/afde6373-a5e3-4c06-9385-8a3e581c597b"></td>
-    <td width="10%"><b>채널<br>댓글</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/933ae00e-0c5b-4133-bafa-b0342f777f9a"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>동영상<br>삭제</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/1a24b2e3-244d-40d7-bec3-2e735076cffd"></td>
-  </tr>
-</table>
+✨ 주요 기능
+👩‍💼 운영자(Admin)용 기능
+관리자 로그인 (Spring Security 기반)
+
+사용자 관리 (회원 조회, 권한 변경, 상태 변경)
+
+통계 및 로그 관리
+
+파일 업로드 (AWS S3 연동)
+
+중요 로그 확인 (로그 레벨별 저장)
+
+👨‍💻 사용자(User)용 기능
+회원 가입 및 로그인 (이메일 인증 포함)
+
+마이페이지 (회원 정보 수정, 프로필 사진 업로드)
+
+서비스 신청 및 내역 확인
+
+알림 확인 및 수신 설정
+
+---
+## 시스템 아키텍처
+![Image](https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783)
 
 ---
 #### 팀원들이 구현한 기능
