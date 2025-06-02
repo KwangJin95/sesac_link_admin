@@ -8,7 +8,7 @@
   
 ---
 ## 프로젝트 기술스택
-<table>
+<table width="100%">
   <tr>
     <td width="10%"><b>Backend</b></td>
     <td width="80%">Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
