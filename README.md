@@ -14,6 +14,7 @@
 ---
 
 ## 🛠️ 기술스택
+
 | 영역 | 기술 |
 |------|------|
 | **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA |
@@ -23,15 +24,24 @@
 | **Logging** | Log4j2 (레벨별/날짜별 파일 저장) |
 
 ---
-## ERD
-<a href="https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei">**ERD Cloud에서 확인**</a>
 
-![erd](https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596)
+## 📐 ERD
+
+- 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
+
+<img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
 
 ---
-## 시스템 아키텍처
-![Image](https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783)
+## 🏗️ 시스템 아키텍처
 
+<img src="https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783" alt="Architecture" width="700"/>
+
+- EC2 인스턴스에서 `nohup java -Xms128m -Xmx256m -jar app.jar > /dev/null 2>&1 &`로 실행
+- 8091/8092 포트로 운영자/학생 프로젝트 구분
+- S3에서 정적 파일 로드
+- RDS MySQL은 3306 포트로 연결
+- Nginx는 현재 미사용 중이며, 포트 직접 노출 방식 사용
+  
 ---
 
 ## ✨ 주요 기능 (추가 예정)
