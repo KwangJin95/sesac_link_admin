@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <!-- 로그 패턴 설정 -->
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+
+        <!-- 로그 파일 경로 -->
+        <Property name="LOG_PATH">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 콘솔 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!-- 파일 저장 Root -->
+        <RollingFile name="FileByWarn"
+                     fileName="${LOG_PATH}/spring-warn.log"
+                     filePattern="${LOG_PATH}/spring-warn-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- 파일 저장 Application -->
+        <RollingFile name="FileForAppByDebug"
+                     fileName="${LOG_PATH}/debug/spring-app-debug.log"
+                     filePattern="${LOG_PATH}/debug/%d{yyyy-MM-dd}/spring-app-debug-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="FileForAppByInfo"
+                     fileName="${LOG_PATH}/info/spring-app-info.log"
+                     filePattern="${LOG_PATH}/info/%d{yyyy-MM-dd}/spring-app-info-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="FileForAppByWarn"
+                     fileName="${LOG_PATH}/warn/spring-app-warn.log"
+                     filePattern="${LOG_PATH}/warn/%d{yyyy-MM-dd}/spring-app-warn-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="FileForAppByError"
+                     fileName="${LOG_PATH}/error/spring-app-error.log"
+                     filePattern="${LOG_PATH}/error/%d{yyyy-MM-dd}/spring-app-error-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 불필요한 디버깅 로그 OFF -->
+        <Logger name="org.hibernate.SQL" level="off"/>
+        <Logger name="org.hibernate.type.descriptor.sql" level="off"/>
+
+        <Logger name="org.springframework.security" level="warn"/>
+        <Logger name="org.springframework" level="warn"/>
+
+        <Logger name="kr.sesaclink" level="info" additivity="false">
+            <!-- 콘솔 어펜더 적용 -->
+            <AppenderRef ref="Console"/>
+            <!-- INFO 어펜더 적용 -->
+            <AppenderRef ref="FileForAppByInfo"/>
+            <!-- WARN 어펜더 적용 -->
+            <AppenderRef ref="FileForAppByWarn"/>
+            <!-- ERROR 어펜더 적용 -->
+            <AppenderRef ref="FileForAppByError"/>
+        </Logger>
+
+        <!-- 루트 로거 -->
+        <Root level="warn">
+            <!-- 콘솔 어펜더 적용 -->
+            <AppenderRef ref="Console"/>
+            <!-- WARN 이상 어펜더 적용 -->
+            <AppenderRef ref="FileByWarn"/>
+        </Root>
+    </Loggers>
+</Configuration>

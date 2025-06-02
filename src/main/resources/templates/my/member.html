@@ -1,0 +1,421 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>마이페이지 > 계정 정보</title>
+</head>
+
+<div layout:fragment="side">
+    <!-- 사이드바 메뉴 항목
+    <div id="sideBar" class="p-4 border">
+        <div class="text-xs">
+            <div class="mb-4">
+                <h3 class="text-gray-600 mb-2">회원 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">운영진 관리</a></li>
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">학생 관리</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="font-medium text-gray-600 mb-2">커뮤니티 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">공지사항 관리</a></li>
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">QnA 관리</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="font-medium text-gray-600 mb-2">공간 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">캠퍼스 관리</a></li>
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">회의실 관리</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="font-medium text-gray-600 mb-2">예약 관리</h3>
+                <ul class="pl-2 space-y-1 text-sm font-bold">
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">회의실 예약</a></li>
+                    <li><a href="#" class="block px-2 py-1 text-gray-700 hover:text-green-500 hover:bg-gray-100 rounded">잡코디 예약</a></li>
+                </ul>
+            </div>
+        </div>
+    -->
+    </div>
+</div>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="member=${#authentication.principal}">
+            <div class="w-full max-w-3xl mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-sm border-b-2 mb-6">
+                    <div class="px-3 py-2 border-b-2 border-black font-bold">계정 정보</div>
+                </div>
+
+                <!-- 내 프로필 섹션 -->
+                <div class="bg-white rounded-lg border-2 p-4 mb-2">
+                    <h2 class="text-lg font-bold mb-6">내 프로필</h2>
+
+                    <div class="space-y-6">
+                        <!-- 이미지 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">이미지</div>
+                            <div class="flex-1">
+                                <div class="border w-32 h-32 rounded-full flex items-center justify-center">
+                                    <!-- 프로필 이미지 있을 때 -->
+                                    <img th:if="${member.profileThumbnail != null}"
+                                         th:src="@{/api/member/view/{filename}(filename=${member.profileThumbnail})}"
+                                         class="w-full h-full rounded-full object-cover"/>
+
+                                    <!-- 없을 때 기본 이미지 -->
+                                    <img th:if="${member.profileThumbnail == null}"
+                                         th:src="@{/images/defaultImage.jpg}"
+                                         class="w-full h-full rounded-full object-cover"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 아이디 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">아이디</div>
+                            <div class="flex-1 font-bold" th:text="${member.id}"></div>
+                        </div>
+
+                        <!-- 이름 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">이름</div>
+                            <div class="flex-1 font-bold" th:text="${member.name}"></div>
+                        </div>
+
+                        <!-- 핸드폰 번호 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">핸드폰 번호</div>
+                            <div class="flex-1 font-bold" th:text="${member.phone}"></div>
+                            <button id="memberModifyBtn" class="h-full bg-green-500 text-white px-4 py-1 rounded-lg hover:bg-green-600 whitespace-nowrap">수정하기</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border-2 p-4 mb-2">
+                    <div class="space-y-6">
+                        <!-- 권한 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">권한</div>
+                            <div class="flex-1 font-bold" th:text="${member.authNameKor}"></div>
+                        </div>
+
+                        <!-- 캠퍼스 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">소속 캠퍼스</div>
+                            <div class="flex-1 font-bold" th:text="${member.campusName}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg border-2 p-4 mb-1">
+                    <div class="space-y-6">
+                        <!-- 이메일 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">이메일</div>
+                            <div class="flex-1 font-bold" th:text="${member.email}"></div>
+                            <button id="emailModifyBtn" class="h-full bg-green-500 text-white px-4 py-1 rounded-lg hover:bg-green-600 whitespace-nowrap">수정하기</button>
+                        </div>
+
+                        <!-- 비밀번호 -->
+                        <div class="flex items-center justify-between">
+                            <div class="w-24 text-sm font-bold">비밀번호</div>
+                            <div class="flex-1 text-gray-500 text-sm"></div>
+                            <button id="pwModifyBtn" class="h-full bg-green-500 text-white px-4 py-1 rounded-lg hover:bg-green-600 whitespace-nowrap">수정하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 하단 설정 버튼 -->
+                <div class="flex justify-between items-center font-bold mr-4">
+                    <div></div>
+                    <div class="flex items-center text-sm">
+                        <button id="withdrawBtn" class="ml-auto" th:if="${member.authName != 'SUPER_ADMIN'}">&gt; 계정 탈퇴</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 프로필 수정 모달 -->
+            <div id="memberModifyModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="memberModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">프로필 수정</h1>
+                    </div>
+
+                    <!-- member Modify form -->
+                    <div class="px-3 pb-2">
+                        <form id="memberModifyForm" action="/my/member" method="post" enctype="multipart/form-data">
+
+                            <div class="mb-4">
+                                <div id="memberModifyFormImageContainer"
+                                     class="hidden border flex items-center justify-center">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="file" class="block text-sm text-gray-700 mb-2 font-bold">이미지</label>
+                                <div class="flex gap-2">
+                                    <input type="file" id="file" name="file" accept="image/*"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <button id="fileCancelBtn" class="h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        취소
+                                    </button>
+                                </div>
+                                <div id="fileInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">jpg, jpeg, png, gif, bmp 파일만 가능합니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm text-gray-700 mb-2 font-bold">이름</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="name" name="name"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="이름을 입력해주세요."
+                                           th:value="${member.name}">
+                                </div>
+                                <div id="nameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="phone" class="block text-sm text-gray-700 mb-2 font-bold">핸드폰 번호</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="phone" name="phone"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="010-1234-5678"
+                                           th:value="${member.phone}">
+                                </div>
+                                <div id="phoneInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">핸드폰 번호를 입력해주세요.</div>
+                                <div id="phoneCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">010-1234-5678 형식으로 입력해주세요.</div>
+                            </div>
+
+                            <input type="hidden" id="adminNo" name="adminNo" th:value="${member.adminNo}">
+                            <button type="submit" id="memberModifySubmitBtn"
+                                    class="w-full bg-green-500 text-white font-medium  py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                프로필 수정
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 이메일 재설정 모달 -->
+            <div id="emailModifyModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="emailModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">이메일 재설정</h1>
+                    </div>
+
+                    <!-- email Modify form -->
+                    <div class="px-3 pb-2 font-bold">
+                        <form id="emailModifyForm" action="/my/member/email" method="post">
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm text-gray-700 mb-2">이메일</label>
+                                <div class="flex gap-2">
+                                    <input type="email" id="email" name="email"
+                                           class="font-medium text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="재설정할 이메일을 입력해주세요.">
+                                    <button id="emailDuplicatedCheckBtn" class="h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        중복 확인
+                                    </button>
+                                </div>
+                                <div id="emailInputMsg" class="text-xs text-red-500 ml-3 mt-2 hidden">이메일을 입력해주세요.</div>
+                                <div id="emailCheckMsg" class="text-xs text-red-500 ml-3 mt-2 hidden">이메일 주소 형식이 올바르지 않습니다. 예시: example@domain.com</div>
+                                <div id="emailDuplicatedCheckMsg" class="text-xs text-red-500 ml-3 mt-2 hidden">"중복된 이메일이거나 중복 확인이 완료되지 않았습니다."</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="emailCode" class="block text-sm text-gray-700 mb-2">이메일 인증 코드</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="emailCode"
+                                           class="text-sm flex-1 px-3 py-2 font-medium border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500" disabled>
+                                    <button id="emailCodeSendBtn" class="h-full font-medium bg-gray-400 text-white px-4 py-2 rounded-lg whitespace-nowrap" disabled>
+                                        이메일 인증 코드 발송
+                                    </button>
+                                </div>
+                                <div id="emailCodeCheckMsg" class="text-xs text-red-500 ml-3 mt-2 hidden">이메일 인증 코드가 올바르지 않습니다.</div>
+                                <div id="emailCodeTimer" class="text-xs text-red-500 ml-3 mt-2 hidden"></div>
+                            </div>
+                            <input type="hidden" name="adminNo" th:value="${member.adminNo}">
+                            <button type="submit" id="emailModifySubmitBtn"
+                                    class="w-full bg-green-500 font-medium text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                이메일 재설정
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 비밀번호 재설정 모달 -->
+            <div id="pwModifyModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="pwModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">비밀번호 재설정</h1>
+                    </div>
+
+                    <!-- pw Modify form -->
+                    <div class="px-3 pb-2">
+                        <form id="pwModifyForm" action="/my/member/pw" method="post">
+                            <div class="mb-4">
+                                <label for="originPw" class="block text-sm font-bold text-gray-700 mb-2">현재 비밀번호</label>
+                                <div class="flex gap-2">
+                                    <input type="password" id="originPw" name="originPw"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="현재 비밀번호를 입력해주세요.">
+                                    <button id="originPwCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        확인
+                                    </button>
+                                </div>
+                                <div id="originPwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">현재 비밀번호를 입력해주세요.</div>
+                                <div id="originPwCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호가 틀렸거나 비밀번호 확인을 완료하지 않았습니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="pw" class="block text-sm font-bold text-gray-700 mb-2">새 비밀번호</label>
+                                <div class="flex gap-2">
+                                    <input type="password" id="pw" name="pw"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="새 비밀번호를 입력해주세요.">
+                                </div>
+                                <div id="pwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">새 비밀번호를 입력해주세요.</div>
+                                <div id="pwCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">영문 / 숫자 / 특수문자 조합 6글자 이상이어야 합니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="confirmPw" class="block text-sm font-bold text-gray-700 mb-2">새 비밀번호 확인</label>
+                                <div class="flex gap-2">
+                                    <input type="password" id="confirmPw" name="confirmPw"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="새 비밀번호 확인을 입력해주세요.">
+                                </div>
+                                <div id="confirmPwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">새 비밀번호 확인을 입력해주세요.</div>
+                                <div id="confirmPwCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">새 비밀번호와 일치하지 않습니다.</div>
+                            </div>
+
+                            <input type="hidden" name="adminNo" th:value="${member.adminNo}">
+                            <button type="submit" id="pwModifySubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                비밀번호 재설정
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 계정 탈퇴 모달 -->
+            <div id="withdrawModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="withdrawModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="px-6 py-8 text-center text-sm">
+                        <!-- 로고 -->
+                        <div class="flex justify-center mb-4">
+                            <img src="/images/logo.png" width="50" height="50" class="rounded-full" />
+                        </div>
+
+                        <!-- 제목 -->
+                        <h2 class="text-xl font-semibold text-gray-800 mb-3">회원 탈퇴 안내</h2>
+                        <p class="text-gray-600 mb-4">안녕하세요, <span class="font-bold">SeSAC Link</span>입니다.</p>
+
+                        <!-- 안내 내용 -->
+                        <div class="text-gray-700 space-y-2 text-left text-[13px]">
+                            <p>회원 탈퇴를 진행하시기 전에 아래 내용을 확인해주세요.</p>
+                            <ul class="list-disc list-inside text-gray-600 py-2">
+                                <li class="mb-1">탈퇴 시 <b>즉시 로그아웃</b>되며, 더 이상 계정에 <b>접근</b>할 수 없습니다.</li>
+                                <li class="tracking-tight mb-1">회원 정보는 <b>일정 기간 보관</b>되며, 이후 <b>완전히 삭제</b>될 수 있습니다.</li>
+                                <li class="mb-1">작성한 글은 <b>삭제</b>되지 않습니다.</li>
+                                <li>계정 탈퇴를 위해 <span class="font-semibold">비밀번호를 입력</span>해 주세요.</li>
+                            </ul>
+                        </div>
+
+                        <!-- 경고 문구 -->
+                        <p class="text-red-500 font-semibold mt-4">⚠ 이 작업은 되돌릴 수 없으니 신중하게 결정해 주세요.</p>
+                    </div>
+
+                    <!-- withdraw form -->
+                    <div class="px-6 pb-8">
+                        <form id="withdrawForm" action="/my/member" method="post">
+                            <!-- DeleteMapping -->
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="adminNo" th:value="${member.adminNo}">
+                            <div class="mb-4">
+                                <label for="pwForWithdraw" class="block text-sm font-bold text-gray-700 mb-2">비밀번호</label>
+                                <div class="flex gap-2">
+                                    <input type="password" id="pwForWithdraw" name="pwForWithdraw"
+                                           class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           placeholder="비밀번호를 입력해주세요.">
+                                    <button id="pwForWithdrawCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        확인
+                                    </button>
+                                </div>
+
+                                <div id="pwForWithdrawInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호를 입력해주세요.</div>
+                                <div id="pwForWithdrawCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호가 틀렸습니다.</div>
+                            </div>
+
+                            <button type="submit" id="withdrawFormSubmitBtn"
+                                    class="w-full bg-gray-400 text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50" disabled>
+                                탈퇴하기
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/member/member.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+</html>

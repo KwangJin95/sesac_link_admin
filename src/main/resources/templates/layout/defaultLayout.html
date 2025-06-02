@@ -1,0 +1,351 @@
+<!doctype html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex flex-col min-h-screen">
+<nav class="bg-white shadow px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex">
+            <a href="/">
+                <img src="/images/logo.png" width="50px" height="50px"/>
+            </a>
+            <a href="/" class="font-bold text-l my-auto ml-3">SeSAC Link 운영진 페이지</a>
+        </div>
+
+        <!-- Menu Items (Desktop View) -->
+        <!-- lg:flex로 데스크탑에서만 보이도록 설정 -->
+        <div class="flex space-x-12 font-bold hidden lg:flex">
+            <!-- 회원 관리 -->
+            <div class="relative group">
+                <div class="text-gray-800 hover:text-green-500">회원 관리</div>
+                <div class="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block bg-white shadow-md rounded-lg w-32 py-2 text-sm">
+                    <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/pre-admin"
+                       class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">운영진</a>
+                    <a sec:authorize="hasAnyRole('ADMIN', 'JOB_COORDINATOR')" href="/admin/members/admin"
+                       class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">운영진</a>
+
+                    <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/pre-user"
+                       class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">학생</a>
+                    <a sec:authorize="hasAnyRole('ADMIN', 'JOB_COORDINATOR')" href="/admin/members/user"
+                       class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">학생</a>
+
+                </div>
+            </div>
+
+            <!-- 커뮤니티 관리 -->
+            <div class="relative group">
+                <div class="text-gray-800 hover:text-green-500">커뮤니티 관리</div>
+                <div class="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block bg-white shadow-md rounded-lg w-32 py-2 text-sm">
+                    <a href="/" class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">공지사항</a>
+                    <a href="/" class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">QnA</a>
+                </div>
+            </div>
+
+            <!-- 공간 관리 -->
+            <div class="relative group">
+                <div class="text-gray-800 hover:text-green-500">공간 관리</div>
+                <div class="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block bg-white shadow-md rounded-lg w-32 py-2 text-sm">
+                    <a href="/space" class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">회의실</a>
+                </div>
+            </div>
+
+            <!-- 예약 관리 -->
+            <div class="relative group">
+                <div class="text-gray-800 hover:text-green-500">예약 관리</div>
+                <div class="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block bg-white shadow-md rounded-lg w-32 py-2 text-sm">
+                    <a href="/reservation/space/daily" class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">회의실</a>
+                    <a href="/reservation/advice/daily" class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">잡코디</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex">
+            <div class="flex font-bold">
+                <!-- 로그인 버튼 -->
+                <div id="loginModalBtn" >
+                    <button th:if="${#authorization.expression('!isAuthenticated()')}" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg">로그인</button>
+                </div>
+            </div>
+
+            <div class="relative flex font-bold">
+                <!-- 마이페이지 버튼 -->
+                <div id="myPageBtn" class="mt-3">
+                    <div class="mt-3">
+                        <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                            <th:block th:with="member=${#authentication.principal}">
+                                <button class="w-[30px] h-[30px] rounded-full">
+                                    <!-- 프로필 이미지 있을 때 -->
+                                    <img th:if="${member.profileThumbnail != null}"
+                                         th:src="@{/api/member/view/{filename}(filename=${member.profileThumbnail})}"
+                                         class="w-full h-full rounded-full object-cover"/>
+
+                                    <!-- 없을 때 기본 이미지 -->
+                                    <img th:if="${member.profileThumbnail == null}"
+                                         th:src="@{/images/defaultImage.jpg}"
+                                         class="w-full h-full rounded-full object-cover"/>
+                                </button>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+
+                <!-- 마이페이지 모달 -->
+                <div id="myPageModal" class="absolute right-0 mt-12 w-80 max-w-xs border border-gray-200 rounded-lg overflow-hidden bg-white hidden z-50">
+                    <div class="w-80 max-w-xs border border-gray-200 rounded-lg overflow-hidden bg-white">
+                        <!-- Header -->
+                        <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+                            <th:block th:with="member=${#authentication.principal}">
+                                <div class="flex justify-between items-center px-4 py-3">
+                                    <div class="flex items-center space-x-2">
+                                        <!-- 프로필 이미지 -->
+                                        <div class="bg-gray-200 rounded-full flex items-center justify-center mr-2">
+                                            <a href="/my/member" class="w-16 h-16 rounded-full overflow-hidden">
+                                                <!-- 프로필 이미지 있을 때 -->
+                                                <img th:if="${member.profileThumbnail != null}"
+                                                     th:src="@{/api/member/view/{filename}(filename=${member.profileThumbnail})}"
+                                                     class="w-full h-full rounded-full object-cover"/>
+
+                                                <!-- 없을 때 기본 이미지 -->
+                                                <img th:if="${member.profileThumbnail == null}"
+                                                     th:src="@{/images/defaultImage.jpg}"
+                                                     class="w-full h-full rounded-full object-cover"/>
+                                            </a>
+                                        </div>
+                                        <!-- 이름 및 역할 -->
+                                        <div class="text-gray-900 font-semibold">
+                                            <div class="flex items-center space-x-1">
+                                                <span>[[${member.name}]]</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <p class="text-xs text-gray-500">[[${member.authNameKor}]]</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 알림 아이콘 -->
+                                    <div class="relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                        <!-- 빨간 점 -->
+                                        <div id="redCircle" class="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 메뉴 -->
+                                <div class="py-2 border-t border-gray-100 text-sm">
+                                    <a href="/my/member" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50">
+                                        <span>계정 관리</span>
+                                    </a>
+                                    <a href="/logout" class="block px-4 py-1 text-gray-600 text-xs text-left hover:bg-gray-50 text-right">
+                                        로그아웃
+                                    </a>
+                                </div>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Items (Mobile View) -->
+    <!-- 모바일에서 수직으로 나열 (flex-col) -->
+    <div class="lg:hidden flex flex-col space-y-2 bg-gray-50 p-3 mt-2">
+        <div class="relative group">
+            <div class="text-gray-800 hover:text-green-500 font-bold">회원 관리</div>
+            <div class="hidden group-hover:block bg-gray-50 rounded-lg w-32 text-sm">
+                <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/pre-admin"
+                   class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">- 운영진</a>
+                <a sec:authorize="hasAnyRole('ADMIN', 'JOB_COORDINATOR')" href="/admin/members/pre-admin"
+                   class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">- 운영진</a>
+                <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/pre-user"
+                   class="block px-4 py-2 text-gray-700 hover:bg-green-500 hover:text-white">- 학생</a>
+            </div>
+        </div>
+        <hr>
+        <div class="relative group">
+            <div class="text-gray-800 hover:text-green-500 font-bold">커뮤니티 관리</div>
+            <div class="hidden group-hover:block bg-gray-50 rounded-lg w-32 text-sm">
+                <a href="#" class="block px-4 mt-1 text-gray-700 hover:font-bold hover:text-green-500">- 공지사항</a>
+                <a href="#" class="block px-4 mt-1 text-gray-700 hover:font-bold hover:text-green-500">- QnA</a>
+            </div>
+        </div>
+        <hr>
+        <div class="relative group">
+            <div class="text-gray-800 hover:text-green-500 font-bold">공간 관리</div>
+            <div class="hidden group-hover:block bg-gray-50 rounded-lg w-32 text-sm">
+                <a href="/space" class="block px-4 mt-1 text-gray-700 hover:font-bold hover:text-green-500">- 회의실</a>
+            </div>
+        </div>
+        <hr>
+        <div class="relative group">
+            <div class="text-gray-800 hover:text-green-500 font-bold">예약 관리</div>
+            <div class="hidden group-hover:block bg-gray-50 rounded-lg w-32 text-sm">
+                <a href="/reservation/space/daily" class="block px-4 mt-1 text-gray-700 hover:font-bold hover:text-green-500">- 회의실</a>
+                <a href="/reservation/advice/daily" class="block px-4 mt-1 text-gray-700 hover:font-bold hover:text-green-500">- 잡코디</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 로그인 모달 -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+    <!-- Modal container -->
+    <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+        <!-- Close button -->
+        <div class="absolute top-4 right-4">
+            <button id="loginModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Logo -->
+        <div class="pt-10 pb-6">
+                <span class="flex items-center justify-center">
+                    <img src="/images/logo.png" width="50px" height="50px"/>
+                </span>
+        </div>
+
+        <!-- Login form -->
+        <div class="px-3 pb-2">
+            <form id="loginForm" action="/login" method="post">
+                <!-- Username input -->
+                <div class="mb-4">
+                    <input type="text" id="username" name="username" placeholder="아이디" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" />
+                    <div id="usernameMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">아이디를 입력해주세요.</div>
+                </div>
+
+                <!-- Password input with eye icon -->
+                <div class="mb-6 relative">
+                    <input type="password" id="password" name="password" placeholder="비밀번호" class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" />
+                    <div id="passwordMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호를 입력해주세요.</div>
+                    <div id="usernamePasswordMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">아이디 또는 비밀번호를 확인해주세요.</div>
+                </div>
+
+                <!-- Login button -->
+                <button id="loginSubmitBtn" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition duration-200">
+                    로그인
+                </button>
+            </form>
+
+            <!-- Bottom links -->
+            <div class="flex justify-center space-x-4 text-sm mt-4 mb-2 text-gray-600 font-bold">
+                <a href="/signup" class="hover:text-green-500">회원가입</a>
+                <span>|</span>
+                <a href="/find-id" class="hover:text-green-500">아이디 찾기</a>
+                <span>|</span>
+                <a href="/find-pw" class="hover:text-green-500">비밀번호 재설정</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 알림 모달 -->
+<div id="alertModal" class="fixed inset-0 bg-black bg-opacity-25 items-center justify-center hidden">
+    <!-- Modal container -->
+    <div class="bg-white rounded-lg w-11/12 max-w-md mx-auto relative">
+        <!-- Close button -->
+        <div class="absolute top-4 right-4">
+            <button id="alertModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="bg-white p-6 rounded-lg">
+            <div class="text-xl font-semibold text-center">알림</div>
+            <p id="alertMsg" class="mt-4 text-center"></p>
+            <div class="flex justify-center mt-6">
+                <button id="alertModalConfirmBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700">
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mx-auto flex w-full xl:w-[85%] flex-1">
+    <!-- 사이드바 -->
+    <aside class="w-44 border-gray-200 hidden lg:block mt-1">
+        <div layout:fragment="side">
+
+        </div>
+    </aside>
+
+    <!-- contents -->
+    <main class="flex-1 w-full">
+        <div class="w-full">
+            <!--<div class="mt-1 mx-1 border border-red-500">-->
+            <div class="mt-1 mx-1">
+                <!-- 실제 콘텐츠 영역 -->
+                <div layout:fragment="content" class="p-4 w-full">
+                    <!-- 콘텐츠 내용이 들어가는 곳 -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 오른쪽 사이드바 -->
+    <aside class="w-44 border-gray-200 hidden lg:block mt-1">
+    </aside>
+</div>
+
+<!-- footer -->
+<footer class="bg-gray-100 py-4 w-full text-xs text-gray-600">
+    <div class="lg:w-[85%] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-row justify-between items-start gap-6">
+            <div>
+                <p class="mb-1 flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c3.866 0 7 3.134 7 7H5c0-3.866 3.134-7 7-7zM12 12a5 5 0 100-10 5 5 0 000 10z" />
+                    </svg>
+                    - 양광진
+                </p>
+                <p class="mb-1 flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                    </svg>
+                    - rhkdwls95@naver.com
+                </p>
+                <p>
+                    &copy; All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script type="module" src="/js/global/defaultLayout.js"></script>
+
+<script th:inline="javascript">
+
+    // 메시지
+    let message = [[${message}]];
+
+    // 메시지 출력
+    if (message != null) {
+        document.querySelector("#alertMsg").innerHTML = message;
+        document.querySelector("#alertModal").classList.remove("hidden");
+    }
+
+</script>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+
+</body>
+</html>

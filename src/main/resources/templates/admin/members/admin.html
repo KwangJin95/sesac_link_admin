@@ -1,0 +1,374 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>회원 관리 > 운영진</title>
+</head>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full justify-center mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-xs border-b-2 mb-6">
+                    <div sec:authorize="hasRole('SUPER_ADMIN')" class="px-3 py-2 font-bold hover:text-green-500 text-gray-400">
+                        <a href="/super-admin/members/pre-admin">
+                            예비 운영진
+                        </a>
+                    </div>
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/admin">
+                            운영진
+                        </a>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'JOB_COORDINATOR')" href="/admin/members/admin">
+                            운영진
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 검색 옵션 -->
+                <div class="w-full mb-6 text-sm">
+                    <form id="adminSearchForm" class="flex flex-col w-full mt-1 gap-2">
+                        <div class="border-b-2 flex justify-between items-center">
+                            <select id="adminAuthType"
+                                    name="adminAuthType"
+                                    class="mb-2 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="aj">권한 전체</option>
+                                <option value="a">운영진</option>
+                                <option value="j">잡코디</option>
+                            </select>
+
+                            <!-- 운영진 등록 버튼 -->
+                            <div sec:authorize="hasRole('SUPER_ADMIN')">
+                                <button type="button"
+                                        id="adminRegisterBtn"
+                                     class="px-4 py-2 mb-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    운영진 등록
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row w-full gap-2 mb-2">
+                            <select id="adminSearchType"
+                                    name="adminSearchType"
+                                    class="w-full md:w-auto px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="ine">전체 검색</option>
+                                <option value="i">아이디</option>
+                                <option value="n">이름</option>
+                                <option value="e">이메일</option>
+                            </select>
+
+                            <input type="text"
+                                   id="adminKeyword"
+                                   name="adminKeyword"
+                                   class="w-full md:flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                   placeholder="검색어를 입력하세요."
+                            />
+
+                            <div class="flex w-full md:w-auto">
+                                <button id="adminSearchSubmitBtn"
+                                        type="button"
+                                        class="flex-1 md:flex-none px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
+                                    검색
+                                </button>
+                                <button id="adminSearchResetBtn"
+                                        type="button"
+                                        class="flex-1 md:flex-none px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 운영진 목록 테이블 -->
+                    <div class="w-full overflow-x-auto">
+                        <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                            <thead>
+                            <tr class="border bg-gray-100">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 50px;">권한</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">아이디</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">이름</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 100px;">핸드폰 번호</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 180px;">이메일</th>
+                                <th:block sec:authorize="hasRole('SUPER_ADMIN')">
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">등록날짜</th>
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">수정날짜</th>
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 150px;">관리</th>
+                                </th:block>
+                            </tr>
+                            </thead>
+
+                            <tbody id="adminTbody" th:data-auth-name="${me.authName}">
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <!-- 페이징 -->
+                    <div id="adminPaginationContainer">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 운영진 등록 모달 -->
+            <div id="adminRegisterModal" class="overflow-y-auto fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adminRegisterModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">운영진 등록하기</h1>
+                    </div>
+
+                    <!-- admin register form -->
+                    <div class="px-2 pb-2 text-sm">
+                        <form id="adminRegisterForm">
+                            <div class="mb-4">
+                                <label for="adminRegisterFormId" class="block font-bold text-gray-700 mb-2">아이디</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="adminRegisterFormId" name="id"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                    />
+                                    <button id="adminIdDuplicatedCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        중복 확인
+                                    </button>
+                                </div>
+                                <div id="adminRegisterFormIdInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">아이디를 입력해주세요.</div>
+                                <div id="adminRegisterFormIdCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">중복된 아이디거나 중복 확인이 완료되지 않았습니다.</div>
+
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormPw" class="block font-bold text-gray-700 mb-2">비밀번호</label>
+                                <input type="text" id="adminRegisterFormPw" name="pw"
+                                       class="w-full text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="비밀번호를 입력하세요.">
+                                <div id="adminRegisterFormPwInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">비밀번호를 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormName" class="block font-bold text-gray-700 mb-2">이름</label>
+                                <input type="text" id="adminRegisterFormName" name="name"
+                                       class="w-full text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <div id="adminRegisterFormNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormPhone" class="block font-bold text-gray-700 mb-2">핸드폰 번호</label>
+                                <input type="text" id="adminRegisterFormPhone" name="phone"
+                                       class="w-full text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="010-1234-5678">
+                                <div id="adminRegisterFormPhoneInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">핸드폰 번호를 입력해주세요.</div>
+                                <div id="adminRegisterFormPhoneCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">010-1234-5678 형식으로 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormEmail" class="block font-bold text-gray-700 mb-2">이메일</label>
+                                <div class="flex gap-2">
+                                    <input type="email" id="adminRegisterFormEmail" name="email"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                    >
+                                    <button id="adminEmailDuplicatedCheckBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        중복 확인
+                                    </button>
+                                </div>
+                                <div id="adminRegisterFormEmailInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일을 입력해주세요.</div>
+                                <div id="adminRegisterFormEmailCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 주소 형식이 올바르지 않습니다. 예시: example@domain.com</div>
+                                <div id="adminRegisterFormEmailDuplicatedCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">중복된 이메일이거나 중복 확인이 완료되지 않았습니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormAdminAuthSelect" class="block text-sm font-bold text-gray-700 mb-2">권한</label>
+                                <div class="flex gap-2">
+                                    <select id="adminRegisterFormAdminAuthSelect" name="adminAuthNo"
+                                            class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        <option th:each="adminAuth : ${adminAuthList}"
+                                                th:value="${adminAuth.adminAuthNo}"
+                                                th:text="${adminAuth.authNameKor}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminRegisterFormCampusName" class="block font-bold text-gray-700 mb-2">캠퍼스</label>
+                                <input type="text" id="adminRegisterFormCampusName" name="campusName"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       th:value="${me.campusName}" disabled>
+                            </div>
+
+                            <input type="hidden" name="campusNo" th:value="${me.campusNo}">
+
+                            <button id="adminRegisterFormSubmitBtn"
+                                    type="button"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                등록하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 운영진 수정하기 모달 -->
+            <div id="adminModifyModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adminModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">운영진 정보 수정하기</h1>
+                    </div>
+
+                    <!-- admin Modify form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="adminModifyForm">
+                            <div class="mb-4">
+                                <label for="adminModifyFormId" class="block font-bold text-gray-700 mb-2">아이디</label>
+                                <input type="text" id="adminModifyFormId" name="id"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       disabled>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminModifyFormEmail" class="block font-bold text-gray-700 mb-2">이메일</label>
+                                <input type="email" id="adminModifyFormEmail" name="email"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       readonly>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label class="block font-bold text-gray-700 mb-2">이미지</label>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <div id="adminModifyFormImageContainer" class="border w-32 h-32 rounded-full flex items-center justify-center">
+
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="font-bold mr-2">이미지 초기화</span>
+                                        <input type="checkbox" value="reset" name="profileThumbnail"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminModifyFormName" class="block font-bold text-gray-700 mb-2">이름</label>
+                                <input type="text" id="adminModifyFormName" name="name"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 이름을 입력하세요.">
+                                <div id="adminModifyFormNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminModifyFormPhone" class="block font-bold text-gray-700 mb-2">핸드폰 번호</label>
+                                <input type="text" id="adminModifyFormPhone" name="phone"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 핸드폰 번호를 입력하세요.">
+                                <div id="adminModifyFormPhoneInputMsg" class="text-red-500 font-bold ml-3 mt-2 hidden">핸드폰 번호를 입력해주세요.</div>
+                                <div id="adminModifyFormPhoneCheckMsg" class="text-red-500 font-bold ml-3 mt-2 hidden">010-1234-5678 형식으로 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminModifyFormPw" class="block font-bold text-gray-700 mb-2">비밀번호</label>
+                                <input type="text" id="adminModifyFormPw" name="pw"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                placeholder="변경할 비밀번호를 입력하세요.">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adminModifyFormAdminAuthSelect" class="block text-sm font-bold text-gray-700 mb-2">권한</label>
+                                <div class="flex gap-2">
+                                    <select id="adminModifyFormAdminAuthSelect" name="adminAuthNo"
+                                            class="text-sm flex-1 px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        <option th:each="adminAuth : ${adminAuthList}"
+                                                th:value="${adminAuth.adminAuthNo}"
+                                                th:text="${adminAuth.authNameKor}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="adminNo">
+
+                            <button type="button" id="adminModifyFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                수정하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 운영진 강제 탈퇴 모달 -->
+            <div id="adminDeleteModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="adminDeleteModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">강제 탈퇴 확인</h1>
+                    </div>
+
+                    <!-- admin delete form -->
+                    <div class="px-2 pb-2">
+                        <form id="adminDeleteForm">
+                            <input type="hidden" id="adminNo" name="adminNo">
+
+                            <!-- 안내 문구 -->
+                            <div class="mt-4 mb-2 text-sm text-center">
+                                <div><b>소속 캠퍼스</b>는 <span class="font-bold text-red-500">없어지며</span>,<br></div>
+                                <div class="mt-2 mb-2"><b>권한</b>은 <span class="font-bold text-red-500">예비 운영진</span>으로,<br></div>
+                                <div><b>회원 상태</b>는 <span class="font-bold text-red-500">강제 탈퇴</span>로 자동 설정됩니다.</div>
+                            </div>
+
+                            <div class="text-m font-bold text-center mb-8 mt-8">
+                                <span id="adminDeleteAuthNameKor"></span> <span id="adminDeleteName"></span>님을 정말로 강제 탈퇴 시키시겠습니까?
+                            </div>
+
+                            <button id="adminDeleteFormSubmitBtn"
+                                    type="button"
+                                    class="w-full bg-red-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                강제 탈퇴 시키기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/member/admin.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>로그인</title>
+</head>
+
+<div layout:fragment="content">
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    // 로그인 모달 보여주기
+    loginModal.classList.remove('hidden');
+
+</script>
+
+</html>

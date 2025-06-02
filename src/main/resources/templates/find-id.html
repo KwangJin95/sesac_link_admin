@@ -1,0 +1,51 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>아이디 찾기</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="mt-7 flex justify-center min-h-screen text-sm">
+        <div class="bg-white p-6 w-full max-w-md">
+            <h1 class="text-2xl font-bold text-center mb-8">아이디 찾기</h1>
+            <form id="findIdForm" action="/find-id" method="post">
+
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+                    <div class="flex gap-2">
+                        <input type="email" id="email" name="email"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div id="emailInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일을 입력해주세요.</div>
+                    <div id="emailCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 주소 형식이 올바르지 않습니다. 예시: example@domain.com</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="email-code" class="block text-sm font-medium text-gray-700 mb-2">이메일 인증 코드</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="email-code"
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500" disabled>
+                        <button id="emailCodeSendBtn" class="h-full bg-gray-400 text-white px-4 py-2 rounded-lg whitespace-nowrap" disabled>
+                            이메일 인증 코드 발송
+                        </button>
+                    </div>
+                    <div id="emailCodeCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이메일 인증 코드가 올바르지 않습니다.</div>
+                    <div id="emailCodeTimer" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden"></div>
+                </div>
+
+                <button type="submit" id="findIdSubmitBtn"
+                        class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    아이디 찾기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/js/domain/member/find-id.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+</script>
+</html>

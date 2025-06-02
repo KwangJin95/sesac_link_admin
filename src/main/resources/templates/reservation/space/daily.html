@@ -1,0 +1,359 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>예약 관리 > 회의실 > 일별</title>
+</head>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full justify-center mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-xs border-b-2 mb-6">
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a href="/reservation/space/daily">
+                            회의실 일별
+                        </a>
+                    </div>
+                    <div class="px-3 py-2 font-bold hover:text-green-500 text-gray-400">
+                        <a href="/reservation/space/period">
+                            회의실 기간별
+                        </a>
+                    </div>
+                </div>
+
+                <div class="w-full mb-6 text-xs">
+                    <!-- 검색 옵션 -->
+                    <form id="searchSpaceReservationForm" class="w-full mt-1 mb-6">
+                        <div class="border-b-2 flex items-center w-full mb-2">
+                            <div class="flex items-center mb-2">
+                                <select id="selectSpace" name="selectSpace"
+                                        class="px-3 py-2 border border-gray-300 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    <option th:if="${#lists.isEmpty(spaceDTOList)}" disabled selected>공간 목록 없음</option>
+                                    <option th:each="spaceDTO : ${spaceDTOList}"
+                                            th:value="${spaceDTO.spaceNo}"
+                                            th:text="${spaceDTO.spaceName}"
+                                            th:data-space-no="${spaceDTO.spaceNo}"
+                                            th:data-space-name="${spaceDTO.spaceName}"
+                                            th:data-space-available-start-time="${spaceDTO.spaceAvailableStartTime}"
+                                            th:data-space-available-end-time="${spaceDTO.spaceAvailableEndTime}"
+                                            th:data-beam-projector="${spaceDTO.beamProjector}"
+                                            th:data-people-count="${spaceDTO.peopleCount}"
+                                            th:data-white-board="${spaceDTO.whiteBoard}"
+                                            th:data-space-image="${spaceDTO.spaceImage}"
+                                    >
+                                    </option>
+                                </select>
+
+                                <input type="date" id="spaceReservationDateDaily" name="spaceReservationDateDaily"
+                                       class="mr-3 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"/>
+
+                                <select id="selectReservationStatus" name="selectReservationStatus"
+                                                 class="px-3 py-2 border border-gray-300 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="%%">상태 전체</option>
+                                <option th:each="reservationStatus : ${reservationStatusList}"
+                                        th:value="${'%'+reservationStatus.statusName+'%'}"
+                                        th:text="${reservationStatus.statusName == 'APPLYING' ?
+                                                '요청' : reservationStatus.statusName == 'REJECTED' ?
+                                                '거절' : reservationStatus.statusName == 'APPROVED' ?
+                                                '승인' : '취소'}"
+                                ></option>
+                            </select>
+
+                                <button id="searchSpaceReservationFormResetBtn" type="button"
+                                        class="flex justify-end px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    초기화
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="w-full mb-4" id="reservationChartContainer">
+                            <canvas id="reservationStatusChart" class="w-full max-h-[300px]"></canvas>
+                        </div>
+
+                        <th:block sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')"
+                                  th:if="${#lists.size(spaceDTOList) != 0}">
+                            <div class="flex items-center space-x-2 justify-end">
+                                <button id="spaceReservationRegisterBtn" type="button"
+                                        class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    예약 등록
+                                </button>
+                                <button id="downloadExcelBtn" type="button"
+                                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    엑셀 다운로드
+                                </button>
+                            </div>
+                        </th:block>
+                    </form>
+
+                    <!-- 예약 목록 테이블 -->
+                    <div class="w-full overflow-x-auto">
+                        <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                            <thead>
+                            <tr class="border bg-gray-100">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">시간</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 110px;">예약자</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 50px;">인원수</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 200px;">사용 목적</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 120px;">마지막 상태 변경인</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 70px;">예약 상태</th>
+                                <th:block sec:authorize="hasRole('SUPER_ADMIN')">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 100px;">관리</th>
+                                </th:block>
+                            </tr>
+                            </thead>
+
+                            <tbody id="spaceReservationTbody" th:data-auth-name="${me.authName}">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 예약 등록 모달 -->
+            <div id="spaceReservationRegisterModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="spaceReservationRegisterModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">공간 예약 등록하기</h1>
+                    </div>
+
+                    <!-- spaceReservation register form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="spaceReservationRegisterForm" >
+
+                            <div class="mb-4">
+                                <label for="spaceReservationRegisterFormSpace" class="block font-bold text-gray-700 mb-2">공간</label>
+                                <select id="spaceReservationRegisterFormSpace" name="spaceNo"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    <option th:if="${#lists.isEmpty(spaceDTOList)}" disabled selected>공간 목록 없음</option>
+                                    <option th:each="spaceDTO : ${spaceDTOList}"
+                                            th:value="${spaceDTO.spaceNo}"
+                                            th:text="${spaceDTO.spaceName}"
+                                            th:data-space-no="${spaceDTO.spaceNo}"
+                                            th:data-space-name="${spaceDTO.spaceName}"
+                                            th:data-space-available-start-time="${spaceDTO.spaceAvailableStartTime}"
+                                            th:data-space-available-end-time="${spaceDTO.spaceAvailableEndTime}"
+                                            th:data-beam-projector="${spaceDTO.beamProjector}"
+                                            th:data-people-count="${spaceDTO.peopleCount}"
+                                            th:data-white-board="${spaceDTO.whiteBoard}"
+                                            th:data-space-image="${spaceDTO.spaceImage}"
+                                    >
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex items-start gap-6">
+                                    <!-- 이미지 영역 -->
+                                    <div id="spaceReservationRegisterFormSpaceImage"
+                                         class="w-60 h-40 flex items-center justify-center overflow-hidden border rounded">
+                                    </div>
+
+                                    <!-- 공간 정보 영역 -->
+                                    <div class="flex flex-col gap-2 text-gray-700">
+                                        <div class="flex items-center gap-1 font-bold">
+                                            <span>화이트보드 -</span>
+                                            <span id="spaceReservationRegisterFormSpaceWhiteBoard" class="font-normal"></span>
+                                        </div>
+                                        <div class="flex items-center gap-1 font-bold">
+                                            <span>빔프로젝터 -</span>
+                                            <span id="spaceReservationRegisterFormSpaceBeamProjector" class="font-normal"></span>
+                                        </div>
+                                        <div class="flex items-center gap-1 font-bold mr-3">
+                                            <span>인원수 -</span>
+                                            <span id="spaceReservationRegisterFormSpacePeopleCount" class="font-normal"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationRegisterFormResDate" class="block font-bold text-gray-700 mb-2">날짜</label>
+                                <input type="date" id="spaceReservationRegisterFormResDate" name="resDate"
+                                   class="mr-3 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"/>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex gap-2">
+                                    <div class="flex flex-col flex-1">
+                                        <label for="spaceReservationRegisterFormStartTime" class="block font-bold text-gray-700 mb-2">시작 시간</label>
+                                        <select id="spaceReservationRegisterFormStartTime" name="startTime"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        </select>
+                                    </div>
+
+                                    <div class="flex flex-col flex-1">
+                                        <label for="spaceReservationRegisterFormEndTime" class="block font-bold text-gray-700 mb-2">종료 시간</label>
+                                        <select id="spaceReservationRegisterFormEndTime" name="endTime"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="spaceReservationRegisterFormAvailableTimeCheckMsg"
+                                     class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">시작 시간과 종료 시간을 다시 확인해주세요.</div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationRegisterFormPeopleCount" class="block font-bold text-gray-700 mb-2">인원수</label>
+                                <input type="number" id="spaceReservationRegisterFormPeopleCount" name="peopleCount"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <div id="spaceReservationRegisterFormPeopleCountInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수를 입력해주세요.</div>
+                                <div id="spaceReservationRegisterFormPeopleCountCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수가 1보다 작거나, 공간 인원수를 초과했습니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationRegisterFormPurpose" class="block font-bold text-gray-700 mb-2">사용 목적</label>
+                                <input type="text" id="spaceReservationRegisterFormPurpose" name="purpose"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <div id="spaceReservationRegisterFormPurposeInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">사용 목적을 입력해주세요.</div>
+                            </div>
+
+                            <!-- 안내 문구 -->
+                            <div class="mt-4 mb-2 text-sm text-center">
+                                <div>
+                                    <b>등록</b> 시 기존 시간대의 예약의 <b>예약 상태는 모두</b>
+                                </div>
+                                <div class="mt-2 mb-2">
+                                    <span class="font-bold text-red-500">거절</span>로 바뀌게 됩니다.
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="adminNo" th:value="${me.adminNo}">
+
+                            <button type="button" id="spaceReservationRegisterFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                등록하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 예약 상태 변경 모달 -->
+            <div id="spaceReservationReservationStatusModifyModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="spaceReservationReservationStatusModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">예약 상태 변경하기</h1>
+                    </div>
+
+                    <!-- spaceReservationReservationStatus modify form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="spaceReservationReservationStatusModifyForm">
+                            <div class="mb-4">
+                                <div class="flex gap-2">
+                                    <div class="flex flex-col flex-1">
+                                        <label for="spaceReservationReservationStatusModifyFormStartTime" class="block font-bold text-gray-700 mb-2">시작 시간</label>
+                                        <input type="text" id="spaceReservationReservationStatusModifyFormStartTime" name="startTime"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               readonly>
+                                    </div>
+
+                                    <div class="flex flex-col flex-1">
+                                        <label for="spaceReservationReservationStatusModifyFormEndTime" class="block font-bold text-gray-700 mb-2">종료 시간</label>
+                                        <input type="text" id="spaceReservationReservationStatusModifyFormEndTime" name="endTime"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationReservationStatusModifyFormUser" class="block font-bold text-gray-700 mb-2">예약자</label>
+                                <input type="text" id="spaceReservationReservationStatusModifyFormUser" name="user"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                disabled>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationReservationStatusModifyFormStatusAdmin" class="block font-bold text-gray-700 mb-2">마지막 상태 변경인</label>
+                                <input type="text" id="spaceReservationReservationStatusModifyFormStatusAdmin" name="statusAdmin"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                disabled>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label for="spaceReservationReservationStatusModifyFormReservationStatus" class="block font-bold text-gray-700 mb-2">예약 상태</label>
+                                <select id="spaceReservationReservationStatusModifyFormReservationStatus" name="reservationStatusNo"
+                                        class="px-3 py-2 border border-gray-300 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                    <option th:each="reservationStatus : ${reservationStatusList}"
+                                            th:value="${reservationStatus.reservationStatusNo}"
+                                            th:text="${reservationStatus.statusName == 'APPLYING' ?
+                                                '요청' : reservationStatus.statusName == 'REJECTED' ?
+                                                '거절' : reservationStatus.statusName == 'APPROVED' ?
+                                                '승인' : '취소'}"
+                                    ></option>
+                                </select>
+                            </div>
+
+                            <!-- 안내 문구 -->
+                            <div class="mt-4 mb-2 text-sm text-center">
+                                <div>
+                                    <span class="font-bold text-blue-500">승인</span> 선택 시 기존 시간대의 예약의
+                                </div>
+                                <div class="mt-2 mb-4">
+                                    <b>예약 상태</b>는 모두 <span class="font-bold text-red-500">거절</span>로 바뀌게 되며,
+                                </div>
+                                <div>
+                                    <span class="font-bold text-blue-500">승인</span>된 예약을 <b>요청 및 취소</b>할 경우, 기존 시간대의
+                                </div>
+                                <div class="mt-2 mb-2">
+                                    <span class="font-bold text-red-500">거절</span>된 예약은 모두 <b>요청</b>으로 바뀌게 됩니다.
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="spaceReservationReservationStatusModifyFormResDate" name="resDate">
+                            <input type="hidden" id="spaceReservationReservationStatusModifyFormSpaceReservationNo" name="spaceReservationNo">
+                            <input type="hidden" id="spaceReservationReservationStatusModifyFormSpaceNo" name="spaceNo">
+                            <input type="hidden" name="statusAdminNo" th:value="${me.adminNo}">
+
+                            <button type="button" id="spaceReservationReservationStatusModifyFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                변경하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </th:block>
+    </th:block>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/js/domain/reservation/space.daily.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</html>

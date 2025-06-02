@@ -1,0 +1,415 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>회원 관리 > 학생</title>
+</head>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full justify-center mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-xs border-b-2 mb-6">
+                    <div sec:authorize="hasRole('SUPER_ADMIN')" class="px-3 py-2 font-bold hover:text-green-500 text-gray-400">
+                        <a href="/super-admin/members/pre-user">
+                            예비 학생
+                        </a>
+                    </div>
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a sec:authorize="hasRole('SUPER_ADMIN')" href="/super-admin/members/user">
+                            학생
+                        </a>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'JOB_COORDINATOR')" href="/admin/members/user">
+                            학생
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 검색 옵션 -->
+                <div class="w-full mb-6 text-sm">
+                    <form id="userSearchForm" class="flex flex-col w-full mt-1 gap-2">
+                        <div class="border-b-2 flex justify-between items-center">
+                            <select id="courseSelect"
+                                    name="courseNo"
+                                    class="mb-2 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    th:data-campus-no="${me.campusNo}">
+                                <option value="0">강좌 전체</option>
+                                <th:block th:if="${courseList != null}">
+                                    <option th:each="course : ${courseList}"
+                                            th:value="${course.courseNo}"
+                                            th:text="${course.courseName}"
+                                    ></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row w-full gap-2 mb-2">
+                            <select id="userSearchType"
+                                    name="userSearchType"
+                                    class="w-full md:w-auto px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="inpea">검색 조건</option>
+                                <option value="i">아이디</option>
+                                <option value="n">이름</option>
+                                <option value="p">핸드폰 번호</option>
+                                <option value="e">이메일</option>
+                                <option value="a">주소</option>
+                            </select>
+
+                            <input type="text"
+                                   id="userKeyword"
+                                   name="userKeyword"
+                                   class="w-full md:flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                   placeholder="검색어를 입력하세요."
+                            />
+
+                            <div class="flex w-full md:w-auto">
+                                <button id="userSearchSubmitBtn"
+                                        type="button"
+                                        class="flex-1 md:flex-none px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2">
+                                    검색
+                                </button>
+                                <button id="userSearchResetBtn"
+                                        type="button"
+                                        class="flex-1 md:flex-none px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 학생 목록 테이블 -->
+                    <div class="w-full overflow-x-auto">
+                        <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                            <thead>
+                            <tr class="border bg-gray-100">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">아이디</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">이름</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 100px;">핸드폰 번호</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 160px;">이메일</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 200px;">주소</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 180px;">최근 강좌</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">담당 잡코디</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">등록날짜</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">수정날짜</th>
+                                <th:block sec:authorize="hasRole('SUPER_ADMIN')">
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 150px;">관리</th>
+                                </th:block>
+                            </tr>
+                            </thead>
+
+                            <tbody id="userTbody" th:data-auth-name="${me.authName}">
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <!-- 페이징 -->
+                    <div id="userPaginationContainer">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 회원 정보 수정 모달 -->
+            <div id="userModifyModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="userModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">학생 정보 수정하기</h1>
+                    </div>
+
+                    <!-- user Modify form -->
+                    <div class="px-2 pb-2 text-[12px]">
+                        <form id="userModifyForm">
+                            <div class="mb-4">
+                                <label for="userModifyFormId" class="block font-bold text-gray-700 mb-2">아이디</label>
+                                <input type="text" id="userModifyFormId" name="id"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       disabled>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormEmail" class="block font-bold text-gray-700 mb-2">이메일</label>
+                                <input type="email" id="userModifyFormEmail" name="email"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       readonly>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label class="block font-bold text-gray-700 mb-2">이미지</label>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <div id="userModifyFormImageContainer" class="border w-32 h-32 rounded-full flex items-center justify-center">
+
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="font-bold mr-2">이미지 초기화</span>
+                                        <input type="checkbox" value="reset" name="profileThumbnail"
+                                               class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormName" class="block font-bold text-gray-700 mb-2">이름</label>
+                                <input type="text" id="userModifyFormName" name="name"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 이름을 입력하세요.">
+                                <div id="userModifyFormNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormPhone" class="block font-bold text-gray-700 mb-2">핸드폰 번호</label>
+                                <input type="text" id="userModifyFormPhone" name="phone"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 핸드폰 번호를 입력하세요.">
+                                <div id="userModifyFormPhoneInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">핸드폰 번호를 입력해주세요.</div>
+                                <div id="userModifyFormPhoneCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">010-1234-5678 형식으로 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormAddress" class="block font-bold text-gray-700 mb-2">주소</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="userModifyFormAddress" name="address"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           readonly
+                                    >
+                                    <button id="userModifyFormFindAddressBtn" class="h-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        주소 찾기
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormDetailAddress" class="block font-bold text-gray-700 mb-2">상세 주소</label>
+                                <input type="text" id="userModifyFormDetailAddress" name="detailAddress"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 상세 주소를 입력하세요.">
+                                <div id="userModifyFormDetailAddressInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">상세 주소를 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormPw" class="block font-bold text-gray-700 mb-2">비밀번호</label>
+                                <input type="text" id="userModifyFormPw" name="pw"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       placeholder="변경할 비밀번호를 입력하세요.">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="userModifyFormAdminNoSelect" class="block font-bold text-gray-700 mb-2">담당 잡코디</label>
+                                <select id="userModifyFormAdminNoSelect" name="adminNo"
+                                        class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        th:data-campus-no="${me.campusNo}">
+                                    <th:block th:if="${jobCoordinatorList != null}">
+                                        <option  th:each="jobCoordinator : ${jobCoordinatorList}"
+                                                th:value="${jobCoordinator.adminNo}"
+                                                th:text="${jobCoordinator.jobCoordinatorName}"
+                                        ></option>
+                                    </th:block>
+                                </select>
+                            </div>
+
+                            <input type="hidden" name="userNo">
+
+                            <button type="button"
+                                    id="userModifyFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                수정하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 강좌 정보 수정 모달 -->
+            <div id="courseModifyModal" class="overflow-y-auto text-xs fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative ">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="courseModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">강좌 정보 수정하기</h1>
+                    </div>
+
+                    <!-- course Modify form -->
+                    <div class="px-2 pb-2 text-sm">
+                        <form id="courseModifyForm">
+                            <div class="mb-4">
+                                <label for="courseModifyFormName" class="block font-bold text-gray-700 mb-2">이름</label>
+                                <input type="text" id="courseModifyFormName" name="name"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                       disabled>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="block font-bold text-gray-700 mb-2">SeSAC에 등록된 강좌</label>
+
+                                <!-- SeSAC에 등록된 강좌 목록 테이블 -->
+                                <div class="w-full overflow-x-auto">
+                                    <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                                        <thead>
+                                        <tr class="border bg-gray-100">
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">강사</th>
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 300px;">강좌명</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="courseModifyModalRegisteredSesacCourseList" class="text-center">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label class="block font-bold text-gray-700 mb-2">등록된 강좌</label>
+
+                                <!-- 등록된 강좌 목록 테이블 -->
+                                <div class="w-full overflow-x-auto">
+                                    <div class="text-xs ml-1 mt-2 mb-1"><b class="text-red-500">삭제</b><b>를 원할 경우</b> <b class="text-red-500">체크</b> 해주세요.</div>
+                                    <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                                        <thead>
+                                        <tr class="border bg-gray-100">
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 40px;">삭제</th>
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">강사</th>
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 300px;">강좌명</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="courseModifyModalRegisteredCourseList" class="text-center">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label class="block font-bold text-gray-700 mb-2">강좌 등록</label>
+
+                                <div class="mb-4">
+                                    <div class="w-30">
+                                        <label for="courseModifyFormCampusSelect" class="text-xs block font-bold text-gray-700 mb-2">캠퍼스</label>
+                                        <select id="courseModifyFormCampusSelect" name="campusNo"
+                                                class="w-full text-xs px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="courseModifyFormCourseSelect" class="text-xs block font-bold text-gray-700 mb-2">강좌</label>
+                                    <div class="flex items-center gap-2">
+                                        <select id="courseModifyFormCourseSelect" name="newCourseNo"
+                                                class="w-10/12 text-xs border border-gray-300 rounded-lg h-10 px-2 focus:outline-none focus:ring-2 focus:ring-green-500 overflow-hidden text-ellipsis">
+                                        </select>
+                                        <button id="courseModifyFormCourseRegisterBtn"
+                                                class="w-2/12 bg-blue-500 text-xs text-white px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 h-10 flex-shrink-0">
+                                            등록
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 강좌 등록 목록 테이블 -->
+                                <div class="w-full overflow-x-auto">
+                                    <div class="text-xs ml-1 mt-2 mb-1"><b>등록을 원하지 않을 경우</b> <b class="text-red-500">체크를 해제</b> 해주세요.</div>
+                                    <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                                        <thead>
+                                        <tr class="border bg-gray-100">
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 40px;">등록</th>
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 70px;">강사</th>
+                                            <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 300px;">강좌명</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="courseModifyFormNewCourseList" class="text-center">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="userNo">
+
+                            <button type="button" id="courseModifyFormSubmitBtn"
+                                    class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                수정하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 학생 강제 탈퇴 모달 -->
+            <div id="userDeleteModal" class="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="userDeleteModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">강제 탈퇴 확인</h1>
+                    </div>
+
+                    <!-- user delete form -->
+                    <div class="px-2 pb-2">
+                        <form id="userDeleteForm">
+
+                            <input type="hidden" id="userNo" name="userNo">
+
+                            <!-- 안내 문구 -->
+                            <div class="mt-4 mb-2 text-sm text-center">
+                                <div><b>소속 캠퍼스</b> 및 <b>담당 잡코디</b>는 <span class="font-bold text-red-500">없어지며</span></div>
+                                <div class="mt-2 mb-2"><b>권한</b>은 <span class="font-bold text-red-500">예비 학생</span>으로</div>
+                                <div><b>회원 상태</b>는 <span class="font-bold text-red-500">강제 탈퇴</span>로 자동 설정됩니다.</div>
+                            </div>
+
+                            <div class="text-m font-bold text-center mb-8 mt-8">
+                                <span id="userDeleteName"></span>님을 정말로 강제 탈퇴 시키시겠습니까?
+                            </div>
+
+                            <button type="button"
+                                    id="userDeleteFormSubmitBtn"
+                                    class="w-full bg-red-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                강제 탈퇴 시키기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/member/user.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</html>

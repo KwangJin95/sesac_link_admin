@@ -1,0 +1,449 @@
+<!doctype html>
+<html   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+        layout:decorate="~{layout/defaultLayout.html}">
+<head>
+    <title>공간 관리</title>
+</head>
+
+<div layout:fragment="content">
+    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
+        <th:block th:with="me=${#authentication.principal}">
+            <div class="w-full justify-center mx-auto font-medium">
+                <!-- 상단 탭 -->
+                <div class="flex text-xs border-b-2 mb-6">
+                    <div class="px-3 py-2 font-bold border-b-2 border-black">
+                        <a href="/space">
+                            공간
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 공간 등록 버튼 -->
+                <th:block sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')">
+                <div class="flex justify-end">
+                    <button id="spaceRegisterBtn" class="px-4 py-2 mb-2 bg-green-500 text-sm text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        공간 등록
+                    </button>
+                </div>
+                </th:block>
+
+                <!-- 공간 목록 테이블 -->
+                <div class="w-full overflow-x-auto">
+                    <table class="min-w-full bg-white border-collapse border border-gray-200 text-xs table-auto">
+                        <thead>
+                            <tr class="border bg-gray-100">
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 100px; width:100px;">이미지</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">공간 이름</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">화이트보드</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">빔프로젝터</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 50px;">인원수</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 80px;">등록자</th>
+                                <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 90px;">운영시간</th>
+                                <th:block sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')">
+                                    <th class="py-1 px-1 text-center font-medium text-gray-600 border-b border border-gray-300" style="min-width: 140px;">관리</th>
+                                </th:block>
+                            </tr>
+                        </thead>
+
+                        <tbody id="spaceTbody" th:data-auth-name="${me.authName}">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 페이징 -->
+                <div id="spacePaginationContainer">
+                </div>
+            </div>
+
+            <!-- 공간 등록 모달 -->
+            <div id="spaceRegisterModal" class="overflow-y-auto fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="spaceRegisterModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">공간 등록하기</h1>
+                    </div>
+
+                    <!-- space register form -->
+                    <div class="px-2 pb-2 text-sm">
+                        <form id="spaceRegisterForm" action="/space" method="post" enctype="multipart/form-data">
+
+                            <div class="mb-4">
+                                <div id="spaceRegisterFormImageContainer"
+                                     class="hidden border flex items-center justify-center">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceRegisterFormSpaceImage" class="block text-sm text-gray-700 mb-2 font-bold">이미지</label>
+                                <div class="flex gap-2 items-center">
+                                    <input type="file" id="spaceRegisterFormSpaceImage" name="spaceImageFile" accept="image/*"
+                                           class="text-xs flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <button id="spaceRegisterFormSpaceImageCancelBtn"
+                                            class="h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        업로드 취소
+                                    </button>
+                                </div>
+                                <div id="spaceRegisterFormSpaceImageInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">jpg, jpeg, png, gif, bmp 파일만 가능합니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceRegisterFormSpaceName" class="block font-bold text-gray-700 mb-2">공간 이름</label>
+                                <input type="text" id="spaceRegisterFormSpaceName" name="spaceName"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                />
+                                <div id="spaceRegisterFormSpaceNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">공간 이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex gap-3 items-center">
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceRegisterFormWhiteBoard" class="block font-bold text-gray-700">화이트보드</label>
+                                        <input type="checkbox" id="spaceRegisterFormWhiteBoard" value="true" name="whiteBoard"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+
+                                    <div class="h-6 border-l border-gray-400"></div>
+
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceRegisterFormBeamProjector" class="block font-bold text-gray-700">빔프로젝터</label>
+                                        <input type="checkbox" id="spaceRegisterFormBeamProjector" value="true" name="beamProjector"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceRegisterFormPeopleCount" class="block font-bold text-gray-700 mb-2">인원수</label>
+                                <input type="number" id="spaceRegisterFormPeopleCount" name="peopleCount"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <div id="spaceRegisterFormPeopleCountInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수를 입력해주세요.</div>
+                                <div id="spaceRegisterFormPeopleCountCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수를 1 이상의 숫자로 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4 text-xs">
+                                <div class="flex gap-3 items-center">
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceRegisterFormSpaceAvailableStartTime" class="block font-bold text-gray-700 mb-2">운영 시작시간</label>
+                                        <select id="spaceRegisterFormSpaceAvailableStartTime" name="spaceAvailableStartTime"
+                                                class="ml-auto px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                            <optgroup label="오전">
+                                                <option>09:00</option>
+                                                <option>10:00</option>
+                                                <option>11:00</option>
+                                            </optgroup>
+                                            <optgroup label="오후">
+                                                <option>12:00</option>
+                                                <option>13:00</option>
+                                                <option>14:00</option>
+                                                <option>15:00</option>
+                                                <option>16:00</option>
+                                                <option>17:00</option>
+                                                <option>18:00</option>
+                                                <option>19:00</option>
+                                                <option>20:00</option>
+                                                <option>21:00</option>
+                                                <option>22:00</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+
+                                    <div class="h-6 border-l border-gray-400"></div>
+
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceRegisterFormSpaceAvailableEndTime" class="block font-bold text-gray-700 mb-2">운영 종료시간</label>
+                                        <select id="spaceRegisterFormSpaceAvailableEndTime" name="spaceAvailableEndTime"
+                                                class="ml-auto px-3 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                            <optgroup label="오전">
+                                                <option>09:00</option>
+                                                <option>10:00</option>
+                                                <option>11:00</option>
+                                            </optgroup>
+                                            <optgroup label="오후">
+                                                <option>12:00</option>
+                                                <option>13:00</option>
+                                                <option>14:00</option>
+                                                <option>15:00</option>
+                                                <option>16:00</option>
+                                                <option>17:00</option>
+                                                <option>18:00</option>
+                                                <option>19:00</option>
+                                                <option>20:00</option>
+                                                <option>21:00</option>
+                                                <option>22:00</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="spaceRegisterFormAvailableTimeCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">시작 시간과 종료 시간을 다시 확인해주세요.</div>
+                            </div>
+
+                            <input type="hidden" name="whiteBoard" value="false">
+                            <input type="hidden" name="beamProjector" value="false">
+
+                            <input type="hidden" name="adminNo"  th:value="${me.adminNo}">
+                            <input type="hidden" name="campusNo" th:value="${me.campusNo}">
+
+                            <div class="flex gap-2 items-center">
+                                <button type="reset" id="spaceRegisterFormResetBtn"
+                                        class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                    초기화
+                                </button>
+                                <button type="button" id="spaceRegisterFormSubmitBtn"
+                                        class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                    등록하기
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 공간 수정 모달 -->
+            <div id="spaceModifyModal" class="overflow-y-auto fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="spaceModifyModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">공간 수정하기</h1>
+                    </div>
+
+                    <!-- space modify form -->
+                    <div class="px-2 pb-2 text-sm">
+                        <form id="spaceModifyForm">
+                            <div class="mb-4">
+                                <div id="spaceModifyFormImageContainer" class="border flex items-center justify-center">
+
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceModifyFormAdminName" class="block font-bold text-gray-700 mb-2">등록자</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="spaceModifyFormAdminName" name="adminName"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                           disabled
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex gap-3 items-center">
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormRegDate" class="block font-bold text-gray-700">등록날짜</label>
+                                        <input type="text" id="spaceModifyFormRegDate" name="regDate"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               disabled
+                                        >
+                                    </div>
+
+                                    <div class="h-6 border-l border-gray-400"></div>
+
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormModDate" class="block font-bold text-gray-700">수정날짜</label>
+                                        <input type="text" id="spaceModifyFormModDate" name="modDate"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                               disabled
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-b-2 border-gray-400 mb-4"></div>
+
+                            <div class="mb-4">
+                                <label for="spaceModifyFormSpaceImage" class="block text-sm text-gray-700 mb-2 font-bold">새로운 이미지</label>
+                                <div class="flex gap-2 items-center">
+                                    <input type="file" id="spaceModifyFormSpaceImage" name="spaceImageFile" accept="image/*"
+                                           class="text-xs flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <button type="button" id="spaceModifyFormSpaceImageCancelBtn" class="h-full font-medium bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                                        업로드 취소
+                                    </button>
+                                </div>
+                                <div id="spaceModifyFormSpaceImageInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">jpg, jpeg, png, gif, bmp 파일만 가능합니다.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceModifyFormSpaceName" class="block font-bold text-gray-700 mb-2">공간 이름</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="spaceModifyFormSpaceName" name="spaceName"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                    />
+                                </div>
+                                <div id="spaceModifyFormSpaceNameInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">공간 이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="flex gap-3 items-center">
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormWhiteBoard" class="block font-bold text-gray-700 mb-2">화이트보드</label>
+                                        <input type="checkbox" id="spaceModifyFormWhiteBoard" value="true" name="whiteBoard"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+
+                                    <div class="h-6 border-l border-gray-400"></div>
+
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormBeamProjector" class="block font-bold text-gray-700 mb-2">빔프로젝터</label>
+                                        <input type="checkbox" id="spaceModifyFormBeamProjector" value="true" name="beamProjector"
+                                               class="ml-2 w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="spaceModifyFormPeopleCount" class="block font-bold text-gray-700 mb-2">인원수</label>
+                                <input type="number" id="spaceModifyFormPeopleCount" name="peopleCount"
+                                       class="w-full flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                <div id="spaceModifyFormPeopleCountInputMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수를 입력해주세요.</div>
+                                <div id="spaceModifyFormPeopleCountCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">인원수를 1 이상의 숫자로 입력해주세요.</div>
+                            </div>
+
+                            <div class="mb-4 text-xs">
+                                <div class="flex gap-3 items-center">
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormSpaceAvailableStartTime" class="block font-bold text-gray-700 mb-2">운영 시작시간</label>
+                                        <select id="spaceModifyFormSpaceAvailableStartTime" name="spaceAvailableStartTime"
+                                                class="ml-auto px-2 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                            <optgroup label="오전">
+                                                <option>09:00</option>
+                                                <option>10:00</option>
+                                                <option>11:00</option>
+                                            </optgroup>
+                                            <optgroup label="오후">
+                                                <option>12:00</option>
+                                                <option>13:00</option>
+                                                <option>14:00</option>
+                                                <option>15:00</option>
+                                                <option>16:00</option>
+                                                <option>17:00</option>
+                                                <option>18:00</option>
+                                                <option>19:00</option>
+                                                <option>20:00</option>
+                                                <option>21:00</option>
+                                                <option>22:00</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+
+                                    <div class="h-6 border-l border-gray-400"></div>
+
+                                    <div class="flex flex-1 items-center">
+                                        <label for="spaceModifyFormSpaceAvailableEndTime" class="block font-bold text-gray-700 mb-2">운영 종료시간</label>
+                                        <select id="spaceModifyFormSpaceAvailableEndTime" name="spaceAvailableEndTime"
+                                                class="ml-auto px-2 py-2 border border-gray-300 rounded-lg border rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                            <optgroup label="오전">
+                                                <option>09:00</option>
+                                                <option>10:00</option>
+                                                <option>11:00</option>
+                                            </optgroup>
+                                            <optgroup label="오후">
+                                                <option>12:00</option>
+                                                <option>13:00</option>
+                                                <option>14:00</option>
+                                                <option>15:00</option>
+                                                <option>16:00</option>
+                                                <option>17:00</option>
+                                                <option>18:00</option>
+                                                <option>19:00</option>
+                                                <option>20:00</option>
+                                                <option>21:00</option>
+                                                <option>22:00</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="spaceModifyFormAvailableTimeCheckMsg" class="text-xs text-red-500 font-bold ml-3 mt-2 hidden">시작 시간과 종료 시간을 다시 확인해주세요.</div>
+                            </div>
+
+                            <input type="hidden" name="whiteBoard"    value="false">
+                            <input type="hidden" name="beamProjector" value="false">
+
+                            <input type="hidden" name="spaceNo">
+
+                            <div class="flex gap-2 items-center">
+                                <button type="button" id="spaceModifyFormResetBtn"
+                                        class="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                    초기화
+                                </button>
+                                <button type="button" id="spaceModifyFormSubmitBtn"
+                                        class="w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                    수정하기
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 공간 삭제 모달 -->
+            <div id="spaceDeleteModal" class="fixed overflow-y-auto inset-0 bg-black bg-opacity-25 flex items-center justify-center hidden">
+                <!-- Modal container -->
+                <div class="bg-white overflow-y-auto max-h-[100vh] rounded-lg w-full max-w-md mx-4 relative">
+                    <!-- Close button -->
+                    <div class="absolute top-4 right-4">
+                        <button id="spaceDeleteModalCloseBtn" class="text-gray-400 hover:text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-bold text-center mb-8 mt-8">공간 삭제 확인</h1>
+                    </div>
+
+                    <!-- space delete form -->
+                    <div class="px-2 pb-2">
+                        <form id="spaceDeleteForm" action="/space" method="post">
+                            <!-- DeleteMapping -->
+                            <input type="hidden" name="_method" value="DELETE">
+
+                            <input type="hidden" id="spaceNo" name="spaceNo">
+
+                            <div class="text-m font-bold text-center mb-8 mt-8">
+                                <span id="spaceDeleteName"></span> 정보를 정말로 삭제 시키시겠습니까?
+                            </div>
+
+                            <button id="spaceDeleteFormSubmitBtn"
+                                    class="w-full bg-red-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                                삭제하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </th:block>
+
+    <script type="module" src="/js/domain/space/space.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+</html>
