@@ -7,18 +7,11 @@
   청년취업사관학교 **SeSAC**에서 교육을 받는 동안, 위와 같은 서비스가 **여러 플랫폼에 분산**되어 있어 **불편함**을 느꼈습니다.<br><br>이러한 **문제를 해결**하고자, 모든 서비스를 **하나의 웹 사이트에서 제공**함으로써 **학생들에게 편의성을 제공**하자는 취지로 시작한 개인 프로젝트입니다.
 ---
 ## 프로젝트 기술스택
-**프론트엔드**
-
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square"/> <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square"/> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square"/> <img src="https://img.shields.io/badge/jQuery-0769AD?style=flat-square"/> <img src="https://img.shields.io/badge/Ajax-66FFFF?style=flat-square"/> 
-<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=flat-square"/>
-
-**백엔드**
-
-<img src="https://img.shields.io/badge/Java8-007396?style=flat-square"/> <img src="https://img.shields.io/badge/Spring-6F6?style=flat-square"/> <img src="https://img.shields.io/badge/ORACLE-F80000?style=flat-square"/> <img src="https://img.shields.io/badge/MyBatis-000000?style=flat-square"/> <img src="https://img.shields.io/badge/Apache Tomcat9-F8DC75?style=flat-square"/>
-
-**개발 툴**
-
-<img src="https://img.shields.io/badge/Bracket-blue?style=flat-square&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/STS3-6F6?style=flat-square&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/Sql%20Developer-green?style=flat-square&logo=java&logoColor=white"/>
+* **Backend** : Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf
+* **Database** : AWS RDS (MySQL)
+* **Frontend** : HTML5, CSS3, JavaScript, Thymeleaf, Tailwind CSS
+* **DevOps** : AWS EC2, RDS, S3, Git
+* **Logging** : Log4j2 (레벨별 파일 저장)
 
 ---
 ## 프로젝트 관련 문서
