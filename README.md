@@ -3,7 +3,7 @@
 
 * **이름** : SeSAC LINK
 * **기간** : 2025.03.01 ~
-* **소개** : <br><br>&nbsp;&nbsp;**SeSAC_LINK**는 청년취업사관학교 **SeSAC**에서 필요한 **공지사항, QnA, 상담 및 시설 예약, 채용 정보** **등을 제공**하는 **학생 지원 플랫폼**입니다.<br><br>
+* **소개** : <br>&nbsp;&nbsp;**SeSAC_LINK**는 청년취업사관학교 **SeSAC**에서 필요한 **공지사항, QnA, 상담 및 시설 예약, 채용 정보** **등을 제공**하는 **학생 지원 플랫폼**입니다.<br><br>
   청년취업사관학교 **SeSAC**에서 교육을 받는 동안, 위와 같은 서비스가 **여러 플랫폼에 분산**되어 있어 **불편함**을 느꼈습니다.<br><br>이러한 **문제를 해결**하고자, 모든 서비스를 **하나의 웹 사이트에서 제공**함으로써 **학생들에게 편의성을 제공**하자는 취지로 시작한 개인 프로젝트입니다.
 
 ---
@@ -33,7 +33,7 @@
 
 ---
 ## ERD
-<a href="https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei" target="_blank">**ERD Cloud에서 확인**</a>
+<a href="https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei" target="blank">**ERD Cloud에서 확인**</a>
 
 ![erd](https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596)
 
