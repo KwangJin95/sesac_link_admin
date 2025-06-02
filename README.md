@@ -33,7 +33,7 @@
 
 ---
 ## ERD
-<a href="https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei" target="blank">**ERD Cloud에서 확인**</a>
+<a href="https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei">**ERD Cloud에서 확인**</a>
 
 ![erd](https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596)
 
