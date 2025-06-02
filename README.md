@@ -5,7 +5,7 @@
 * **기간** : 2025.03.01 ~
 * **소개** :
 
-  **SeSAC_LINK**는 청년취업사관학교 **SeSAC**에서 필요한 '공지사항', 'QnA', '상담 및 시설 예약', '채용 정보' 등을 제공하는 **학생 지원 플랫폼**입니다.
+  **SeSAC LINK**는 청년취업사관학교 **SeSAC**에서 필요한 '공지사항', 'QnA', '상담 및 시설 예약', '채용 정보' 등을 제공하는 **학생 지원 플랫폼**입니다.
   
   기존에는 이러한 서비스들이 **여러 플랫폼에 분산**되어 있어 학생들이 **불편함**을 겪고 있었습니다.
   
@@ -40,23 +40,47 @@
 - 8091/8092 포트로 운영자/학생 프로젝트 구분
 - S3에서 정적 파일 로드
 - RDS MySQL은 3306 포트로 연결
-- Nginx는 현재 미사용 중이며, 포트 직접 노출 방식 사용
+- Nginx, HTTPS 및 SSL 인증서 도입 예정
   
 ---
 
 ## ✨ 주요 기능 (추가 예정)
 
-👩‍💼 운영자(Admin)용 기능
-관리자 로그인 (Spring Security 기반)
+🔓 비로그인 사용자 (게스트)
+회원가입
 
-사용자 관리 (회원 조회, 권한 변경, 상태 변경)
+로그인
 
-통계 및 로그 관리
+아이디 / 비밀번호 찾기 (이메일 인증 포함)
 
-파일 업로드 (AWS S3 연동)
+👤 일반 운영자 (ROLE_USER)
+내 정보 확인 및 수정
 
-중요 로그 확인 (로그 레벨별 저장)
+비밀번호 변경
 
+파일 업로드 (S3)
+
+로그아웃
+
+🛠️ 관리자 (ROLE_ADMIN)
+사용자 목록 조회
+
+사용자 계정 상태 변경 (활성/비활성)
+
+예약 신청 내역 관리
+
+로그 확인 (레벨별 Log4j2 저장 확인)
+
+파일 업로드 (S3)
+
+🧑‍💼 최상위 관리자 (ROLE_SUPER_ADMIN)
+관리자 권한 사용자 등록
+
+사용자 권한 변경 (ROLE_USER ↔ ROLE_ADMIN)
+
+전체 사용자 관리 (등록/수정/삭제)
+
+모든 기능 접근 가능
 ---
 
 ## 🔐 권한별 기능 정리
@@ -73,83 +97,8 @@
 | 파일 업로드 (S3) | ✅ | ✅ | ✅ |
 | 관리자 페이지 접근 | ❌ | ✅ | ✅ |
 
-
-
-
-
 ---
-#### 팀원들이 구현한 기능
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td width="10%"><b>회원가입</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/4d1786ca-f64c-42a0-a9d1-1f5bacd38a56"></td>
-    <td width="10%"><b>로그인</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/f01e6a10-4cfa-430e-9c42-9531a7fb4831"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>아이디<br>찾기</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/e0e6af98-c62d-401c-9cc7-b146c0addef5"></td>
-    <td width="10%"><b>비밀<br>번호<br>찾기</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/1cdd8ee1-1d6f-460b-a0d5-eeed39074194"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>회원<br>정보<br>조회<br>및<br>수정</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/d101075a-2836-45f6-9679-4686bd9eee37"></td>
-    <td width="10%"><b>동영상<br>목록<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/98154fee-92c3-47f0-ad7b-523a948110bd"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>동영상<br>상세<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/526e074c-a1c3-4d1e-bc80-e1d81fef3926"></td>
-    <td width="10%"><b>동영상<br>등록<br></b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/34795b26-4ad6-4259-84b3-9bf23a6a44c7"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>동영상<br>수정</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/59f4dd03-58fe-4d7c-bf49-dc368504db8a"></td>
-    <td width="10%"><b>댓글<br>목록<br>및<br>상세<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/c32b4f3c-d059-4cab-8520-26057405ec6b"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>댓글<br>등록,<br>수정,<br>삭제</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/b6f3a2ec-38b3-412f-8b7d-9c9dfc471b4e"></td>
-    <td width="10%"><b>좋아요<br>조회,<br>추가,<br>삭제</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/8444ef50-d6b0-4c6d-ad87-e832e751c2fd"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>구독<br>추가<br>및<br>삭제</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/2d86807e-cee9-4f5b-ab09-0edf0c1d347f"></td>
-    <td width="10%"><b>구독<br>목록<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/6d3723c1-fed3-4d0e-8789-54134f1371dc"></td>
-  </tr>
-  <tr>
-    <td width="10%"><b>문의<br>목록<br>및<br>상세<br>조회</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/efb8af6c-9fd3-4c5d-bcbb-759e8f02fa24"></td>
-    <td width="10%"><b>문의<br>등록</b></td>
-    <td width="40%"><img src="https://github.com/user-attachments/assets/46de366c-ef09-44b3-bd37-bf72b68da9ff"></td>
-  </tr>
-</table>
 
----
-### 요약
-
-|**분류**|**공통**|**사용자**|
-|:--|:--|:--|
-|회원|회원가입, 로그인, 아이디 찾기, 비밀번호 찾기|회원 정보 조회 및 수정|
-|동영상|동영상 목록 및 상세 조회|동영상 관리|
-|댓글|댓글 목록 및 상세 조회|댓글 관리|
-|좋아요|좋아요 수 조회|좋아요 추가 및 삭제|
-|구독|구독자 수 조회|구독 목록 조회, 구독 추가 및 삭제|
-|채널|채널 목록 및 상세 조회|채널 관리|
-|문의|문의 목록 조회|문의 상세 조회 및 등록|
-
----
 ### [ 공통 기능 ]
 
 #### 회원
@@ -227,85 +176,11 @@
  - 동영상 섬네일 또는 제목 클릭 시 해당 동영상 시청 페이지로 이동
 ---
 
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td><b>채널<br>콘텐츠</b></td>
-    <td width="85%"><img src="https://github.com/user-attachments/assets/863d1065-d94b-4419-840f-b6816241bf7f"></td>
-  </tr>
-</table>
 
- - 프로필 사진 클릭 시 내 채널 페이지로 이동
- - 분석 클릭 시 채널 분석 페이지로 이동
- - 댓글 클릭 시 채널 댓글 페이지로 이동
- - 의견 보내기 클릭 시 Q&A 등록 페이지로 이동
- - 필터 기능의 경우 입력한 키워드를 포함하거나 부등호(≥, ≤)를 선택하여 검색 가능하며, 날짜의 경우 YYYY-MM-DD 형태로 입력하지 않을 경우 경고 메시지 출력하며, 조회수, 댓글수, 좋아요 옵션의 경우 숫자를 제외한 값 입력 또는 미입력시 경고 메시지 출력
- - 페이지당 행 수의 경우 2, 5, 10행으로 선택 가능
- - 필터 및 페이지당 행 수의 경우 페이지 전환 없이 Ajax로 비동기식 처리로 구현
- - 동영상 섬네일 및 제목 클릭 시 동영상 수정 화면으로 이동
----
-
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td><b>동영상<br>삭제</b></td>
-    <td width="85%"><img src="https://github.com/user-attachments/assets/3b61edf7-50ea-408a-8110-1e23a2fe3227"></td>
-  </tr>
-</table>
-
-- 체크박스 선택 시 삭제 메뉴 노출
-- 테이블 헤더 체크 박스 또는 전체 선택 클릭 시 전체 선택
-- X 클릭 시 모든 체크박스 해제 및 삭제 메뉴 미노출
-- 삭제하기 클릭 시 삭제 확인 메시지 표시 후 선택된 모든 동영상 삭제 처리
----
-
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td><b>채널<br>분석</b></td>
-    <td width="85%"><img src="https://github.com/user-attachments/assets/cd827dd9-d0d3-47c4-816f-7281d20cc4d5"></td>
-  </tr>
-</table>
-
- - 프로필 사진 클릭 시 내 채널 페이지로 이동
- - 콘텐츠 클릭 시 채널 콘텐츠 페이지로 이동
- - 댓글 클릭 시 채널 댓글 페이지로 이동
- - 의견 보내기 클릭 시 Q&A 등록 페이지로 이동
- - 현재 날짜에서 7, 28, 90, 365일 전까지의 구독자 수와 댓글수에 대한 추이를 선택 기간별 일정 간격의 그래프로 확인 가능
- - 기간 선택 및 구독자, 댓글수의 그래프의 경우 페이지 전환 없이 Ajax로 비동기식 처리로 구현
----
-
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td><b>채널<br>댓글</b></td>
-    <td width="85%"><img src="https://github.com/user-attachments/assets/4e4c3517-d8c0-4473-97f7-8525f9f40085"></td>
-  </tr>
-</table>
-
- - 프로필 사진 클릭 시 내 채널 페이지로 이동
- - 콘텐츠 클릭 시 채널 콘텐츠 페이지로 이동
- - 분석 클릭 시 채널 분석 페이지로 이동
- - 프로필 사진 또는 채널명 클릭 시 해당 채널 페이지로 이동
- - 동영상 섬네일 또는 제목 클릭 시 해당 동영상 시청 페이지로 이동
- - 필터 기능의 경우 입력한 키워드를 포함하거나 부등호(≥, ≤)를 선택하여 검색 가능하며, 날짜의 경우 YYYY-MM-DD 형태로 입력하지 않을 경우 경고 메시지 출력하며, 아이디, 댓글 옵션의 경우 미입력시 경고 메시지 출력
- - 페이지당 행 수의 경우 2, 5, 10행으로 선택 가능
- - 필터 및 페이지당 행 수의 경우 페이지 전환 없이 Ajax로 비동기식 처리로 구현
 ---
 
 ## 📁 패키지 구조
+
 ```
 pom.xml
 fakeTube.sql                            : DB 관련 SQL문 작성 파일
@@ -372,3 +247,10 @@ fakeTube.sql                            : DB 관련 SQL문 작성 파일
                  └─views                : 각종 jsp 파일
 
 ```
+
+---
+## 🔧 향후 개선 방향
+
+
+---
+
