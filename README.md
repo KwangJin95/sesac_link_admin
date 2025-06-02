@@ -8,28 +8,13 @@
 
 ---
 ## 프로젝트 기술스택
-<table width="100%">
-  <tr>
-    <td width="10%"><b>Backend</b></td>
-    <td>Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
-  </tr>
-  <tr>
-    <td width="10%"><b>Database</b></td>
-    <td>AWS RDS (MySQL)</td>
-  </tr>
-  <tr>
-    <td width="10%"><b>Frontend</b></td>
-    <td>HTML5, CSS3, JavaScript, Thymeleaf, Tailwind CSS</td>
-  </tr>
-  <tr>
-    <td width="10%"><b>DevOps</b></td>
-    <td>AWS EC2, RDS, S3, Git</td>
-  </tr>
-  <tr>
-    <td width="10%"><b>Logging</b></td>
-    <td>Log4j2 (레벨별 파일 저장)</td>
-  </tr>
-</table>
+| 영역 | 기술 |
+|------|------|
+| **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA |
+| **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
+| **Database** | AWS RDS (MySQL) |
+| **DevOps** | AWS EC2, S3, Git |
+| **Logging** | Log4j2 (레벨별 파일 저장) |
 
 ---
 ## ERD
