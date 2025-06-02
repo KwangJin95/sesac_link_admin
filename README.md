@@ -17,7 +17,7 @@
 
 | 영역 | 기술 |
 |------|------|
-| **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA |
+| **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA, QueryDSL |
 | **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
 | **Database** | AWS RDS (MySQL) |
 | **DevOps** | AWS EC2, S3, Git |
@@ -25,13 +25,6 @@
 
 ---
 
-## 📐 ERD
-
-- 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
-
-<img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
-
----
 ## 🏗️ 시스템 아키텍처
 
 <img src="https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783" alt="Architecture" width="700"/>
@@ -42,6 +35,14 @@
 - RDS MySQL은 3306 포트로 연결
 - Nginx, HTTPS 및 SSL 인증서 도입 예정
   
+---
+
+## 📐 ERD
+
+- 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
+
+<img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
+
 ---
 
 ## ✨ 주요 기능 (추가 예정)
