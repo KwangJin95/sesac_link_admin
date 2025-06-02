@@ -11,23 +11,23 @@
 <table width="100%">
   <tr>
     <td width="10%"><b>Backend</b></td>
-    <td width="80%">Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
+    <td>Java 17, Spring Boot, Spring Data JPA, Spring Security, Thymeleaf</td>
   </tr>
   <tr>
     <td width="10%"><b>Database</b></td>
-    <td width="80%">AWS RDS (MySQL)</td>
+    <td>AWS RDS (MySQL)</td>
   </tr>
   <tr>
     <td width="10%"><b>Frontend</b></td>
-    <td width="80%">HTML5, CSS3, JavaScript, Thymeleaf, Tailwind CSS</td>
+    <td>HTML5, CSS3, JavaScript, Thymeleaf, Tailwind CSS</td>
   </tr>
   <tr>
     <td width="10%"><b>DevOps</b></td>
-    <td width="80%">AWS EC2, RDS, S3, Git</td>
+    <td>AWS EC2, RDS, S3, Git</td>
   </tr>
   <tr>
     <td width="10%"><b>Logging</b></td>
-    <td width="80%">Log4j2 (레벨별 파일 저장)</td>
+    <td>Log4j2 (레벨별 파일 저장)</td>
   </tr>
 </table>
 
