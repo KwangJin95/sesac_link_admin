@@ -1,4 +1,4 @@
-# SeSAC LINK (학생 지원 플랫폼)
+# SeSAC LINK (학생 지원 플랫폼) - 운영자용
 
 
 * **이름** : SeSAC LINK
@@ -7,14 +7,14 @@
   청년취업사관학교 **SeSAC**에서 교육을 받는 동안, 위와 같은 서비스가 **여러 플랫폼에 분산**되어 있어 **불편함**을 느꼈습니다.<br><br>이러한 **문제를 해결**하고자, 모든 서비스를 **하나의 웹 사이트에서 제공**함으로써 **학생들에게 편의성을 제공**하자는 취지로 시작한 개인 프로젝트입니다.
 
 ---
-## 프로젝트 기술스택
+## 기술스택
 | 영역 | 기술 |
 |------|------|
 | **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA |
 | **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
 | **Database** | AWS RDS (MySQL) |
 | **DevOps** | AWS EC2, S3, Git |
-| **Logging** | Log4j2 (레벨별 파일 저장) |
+| **Logging** | Log4j2 (레벨/날짜별 파일 저장) |
 
 ---
 ## ERD
@@ -23,8 +23,13 @@
 ![erd](https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596)
 
 ---
+## 시스템 아키텍처
+![Image](https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783)
+
+---
+
 ## 주요 기능
-✨ 주요 기능
+
 👩‍💼 운영자(Admin)용 기능
 관리자 로그인 (Spring Security 기반)
 
@@ -36,18 +41,8 @@
 
 중요 로그 확인 (로그 레벨별 저장)
 
-👨‍💻 사용자(User)용 기능
-회원 가입 및 로그인 (이메일 인증 포함)
 
-마이페이지 (회원 정보 수정, 프로필 사진 업로드)
 
-서비스 신청 및 내역 확인
-
-알림 확인 및 수신 설정
-
----
-## 시스템 아키텍처
-![Image](https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783)
 
 ---
 #### 팀원들이 구현한 기능
