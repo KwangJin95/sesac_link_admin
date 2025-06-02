@@ -1,20 +1,25 @@
 # SeSAC LINK (학생 지원 플랫폼) - 운영자용
 
-
+## 📌 프로젝트 개요
 * **이름** : SeSAC LINK
 * **기간** : 2025.03.01 ~
-* **소개** : <br>&nbsp;&nbsp;**SeSAC_LINK**는 청년취업사관학교 **SeSAC**에서 필요한 **공지사항, QnA, 상담 및 시설 예약, 채용 정보** **등을 제공**하는 **학생 지원 플랫폼**입니다.<br><br>
-  청년취업사관학교 **SeSAC**에서 교육을 받는 동안, 위와 같은 서비스가 **여러 플랫폼에 분산**되어 있어 **불편함**을 느꼈습니다.<br><br>이러한 **문제를 해결**하고자, 모든 서비스를 **하나의 웹 사이트에서 제공**함으로써 **학생들에게 편의성을 제공**하자는 취지로 시작한 개인 프로젝트입니다.
+* **소개** :
+  'SeSAC_LINK'는 청년취업사관학교 **SeSAC**에서 필요한
+  '공지사항', 'QnA', '상담 및 시설 예약', '채용 정보' 등을 제공하는 **학생 지원 플랫폼**입니다.
+  
+  기존에는 이러한 서비스들이 **여러 플랫폼에 분산**되어 있어 학생들이 **불편함**을 겪고 있었습니다.
+  이를 해결하고자, **모든 기능을 하나의 웹 서비스로 통합**한 플랫폼을 개발하게 되었습니다.
 
 ---
-## 기술스택
+
+## 🛠️ 기술스택
 | 영역 | 기술 |
 |------|------|
 | **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA |
 | **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
 | **Database** | AWS RDS (MySQL) |
 | **DevOps** | AWS EC2, S3, Git |
-| **Logging** | Log4j2 (레벨/날짜별 파일 저장) |
+| **Logging** | Log4j2 (레벨별/날짜별 파일 저장) |
 
 ---
 ## ERD
@@ -28,7 +33,7 @@
 
 ---
 
-## 주요 기능
+## ✨ 주요 기능 (추가 예정)
 
 👩‍💼 운영자(Admin)용 기능
 관리자 로그인 (Spring Security 기반)
@@ -40,6 +45,23 @@
 파일 업로드 (AWS S3 연동)
 
 중요 로그 확인 (로그 레벨별 저장)
+
+---
+
+## 🔐 권한별 기능 정리
+
+| 기능 항목 | ROLE_USER | ROLE_ADMIN | ROLE_SUPER_ADMIN |
+|-----------|-----------|------------|------------------|
+| 회원가입 / 로그인 | ✅ | ❌ | ❌ |
+| 마이페이지 (정보 수정, 비밀번호 변경) | ✅ | ❌ | ❌ |
+| 서비스 신청 / 조회 | ✅ | ❌ | ❌ |
+| 사용자 목록 보기 | ❌ | ✅ | ✅ |
+| 사용자 권한 변경 | ❌ | ❌ | ✅ |
+| 사용자 계정 상태 변경 | ❌ | ✅ | ✅ |
+| 로그 확인 | ❌ | ✅ | ✅ |
+| 파일 업로드 (S3) | ✅ | ✅ | ✅ |
+| 관리자 페이지 접근 | ❌ | ✅ | ✅ |
+
 
 
 
@@ -172,7 +194,8 @@
 * **문의 상세 조회 및 등록** : 회원은 문의 목록 및 상세를 조회할 수 있고, 문의를 등록할 수 있다. 문의 등록시 비밀글로 등록할 경우 본인만 조회 가능하다.
   
 ---
-### ‼️내가 구현한 기능 상세
+
+## 🖥️ 주요 화면
 
 <table>
   <tr>
@@ -271,20 +294,7 @@
  - 필터 및 페이지당 행 수의 경우 페이지 전환 없이 Ajax로 비동기식 처리로 구현
 ---
 
-## 사용법
-❗로컬 환경에서 구동해야 합니다.
-- version : JDK 1.8, oracle 11g (port:1521 / service:XE), Tomcat 9, sts-3.9.13.RELEASE
-- encoding : UTF-8
-
-
-1. oracle 관리자 계정에서 root 폴더의 **fakeTube.sql** 파일 실행 -> src/main/resources/applicationContext.xml에서 DB 설정정보 참고
-2. sts-3.9.13.RELEASE 설치 후 Package Explorer 에서 Import - **Projects from Folder or Archive**로 압축해제한 폴더 지정
- - Windows - Preferences - General - Workspace - **Refresh using native hooks or polling 체크**
- - Web - CSS, HTML, JSP Files 에서 **Encoding** 방식 **UTF-8**로 설정
-3. 메일 인증 관련 설정
- - src/main/java/com/spring/ft/members/**MailSendService.java**에서 **setFrom** 변수에 **email 주소 입력**
- - src/main/resources/applicationContext.xml에서 **이메일 인증 관련 계정 설정**에서 **username, password에 email 주소, 비밀번호 입력**
-4. 패키지 구조
+## 📁 패키지 구조
 ```
 pom.xml
 fakeTube.sql                            : DB 관련 SQL문 작성 파일
