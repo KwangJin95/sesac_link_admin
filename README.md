@@ -223,7 +223,7 @@
 
 ---
 
-⚙️ 기능 흐름도
+## ⚙️ 기능 흐름도
 - 공통
 ![Image](https://github.com/user-attachments/assets/8edadfae-6c54-45b6-8148-4ccfba605fdb)
 
