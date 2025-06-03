@@ -29,7 +29,7 @@
 
 <img src="https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783" alt="Architecture" width="700"/>
 
-- EC2 인스턴스에서 `nohup java -Xms128m -Xmx256m -jar app.jar > /dev/null 2>&1 &`로 실행
+- EC2 인스턴스에서 `nohup java -Xms128m -Xmx256m -jar .jar > /dev/null 2>&1 &`로 실행
 - 8091/8092 포트로 운영자/학생 프로젝트 구분
 - S3에서 정적 파일 로드
 - RDS MySQL은 3306 포트로 연결
