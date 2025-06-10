@@ -1,8 +1,8 @@
-# SeSAC LINK (학생 지원 플랫폼) - 운영자용
+# SeSAC LINK Admin (SeSAC 학생 지원 플랫폼 - 운영자용)
 
 ## 📌 프로젝트 개요
-* **이름** : SeSAC LINK
-* **기간** : 2025.03.05 ~
+* **기간** : 2025.03.05 ~ 진행중
+* **인원** : 1명 (개인 프로젝트)
 * **소개** :
 
   **SeSAC LINK**는 청년취업사관학교 **SeSAC**에서 필요한 '공지사항', 'QnA', '상담 및 시설 예약', '채용 정보' 등을 제공하는 **학생 지원 플랫폼**입니다.
@@ -29,11 +29,10 @@
 
 <img src="https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783" alt="Architecture" width="700"/>
 
-- EC2 인스턴스에서 `nohup java -Xms128m -Xmx256m -jar .jar > /dev/null 2>&1 &`로 실행
-- 8091/8092 포트로 운영자/학생 프로젝트 구분
-- S3에서 정적 파일 로드
-- RDS MySQL은 3306 포트로 연결
-- Nginx, HTTPS 및 SSL 인증서 도입 예정
+- EC2 인스턴스 : `nohup java -Xms128m -Xmx256m -jar .jar > /dev/null 2>&1 &`로 실행
+- 포트 구성 : 8091(운영자) / 8092(학생)
+- 데이터베이스 : RDS MySQL (3306 포트)
+- 파일 저장소 : S3 정적 파일 로드
   
 ---
 
