@@ -36,14 +36,6 @@
   
 ---
 
-## 📐 ERD
-
-- 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
-
-<img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
-
----
-
 ## ✨ 권한별 기능 정리 (추가 예정)
 
 🔓 비로그인 사용자
@@ -229,6 +221,20 @@
 
 ---
 
+## 📐 ERD
+
+- 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
+
+<img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
+
+---
+
+## 📚 API 문서
+
+- 👉 [Notion에서 보기](https://www.notion.so/210798a6acd780b8b9cae037d15ae62f?v=210798a6acd78082853f000cde73220b&source=copy_link)
+
+---
+
 ## 🖥️ 주요 화면
 
 <table>
@@ -250,6 +256,8 @@
  - 동영상 섬네일 또는 제목 클릭 시 해당 동영상 시청 페이지로 이동
 ---
 
+
+https://www.notion.so/210798a6acd780b8b9cae037d15ae62f?v=210798a6acd78082853f000cde73220b&source=copy_link
 
 ---
 
