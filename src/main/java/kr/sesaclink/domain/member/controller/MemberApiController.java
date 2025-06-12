@@ -97,7 +97,7 @@ public class MemberApiController {
         return memberService.getJobCoordinatorList(campusNo);
     }
 
-    // PRE_ADMIN 목록 가져오기
+    // PRE_ADMIN 회원 정보 목록 가져오기
     @GetMapping("/pre-admin")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public PageResponseDTO<PreAdminDTO> getPreAdminList(@RequestParam(defaultValue = "1") Integer page,
@@ -111,7 +111,7 @@ public class MemberApiController {
                                                   keyword);
     }
 
-    // ADMIN, JOB_COORDINATOR 목록 가져오기
+    // ADMIN, JOB_COORDINATOR 회원 정보 목록 가져오기
     @GetMapping("/admin")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'JOB_COORDINATOR')")
     public PageResponseDTO<AdminDTO> getAdminList(@AuthenticationPrincipal AdminMemberSecurityDTO adminMemberSecurityDTO,
@@ -128,7 +128,7 @@ public class MemberApiController {
                                                adminMemberSecurityDTO.getAuthName());
     }
 
-    // USER 목록 가져오기
+    // USER 회원 정보 목록 가져오기
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'JOB_COORDINATOR')")
     public PageResponseDTO<UserDTO> getUserList(@AuthenticationPrincipal AdminMemberSecurityDTO adminMemberSecurityDTO,
@@ -146,7 +146,7 @@ public class MemberApiController {
                                               adminMemberSecurityDTO.getAdminNo());
     }
 
-    // PRE_ADMIN 가져오기
+    // PRE_ADMIN 가져오기(소속 캠퍼스, 권한, 회원 상태 변경)
     @PutMapping("/pre-admin")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public String updatePreAdmin(PreAdminDTO preAdminDTO) {
@@ -159,7 +159,7 @@ public class MemberApiController {
                 messageService.getMessage("super_admin.pre_admin.update.failure");
     }
 
-    // PRE_USER 가져오기
+    // PRE_USER 가져오기(소속 캠퍼스, 권한, 회원 상태 변경)
     @PutMapping("/pre-user")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public String updatePreUser(PreUserDTO preUserDTO) {
@@ -205,7 +205,7 @@ public class MemberApiController {
                    messageService.getMessage("super_admin.admin.update.failure");
     }
 
-    // ADMIN, JOB_COORDINATOR 강제 탈퇴
+    // ADMIN, JOB_COORDINATOR 강제 탈퇴(소속 캠퍼스, 권한, 회원 상태 변경)
     @DeleteMapping("/admin")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public String deleteAdmin(Long adminNo) {
@@ -217,7 +217,7 @@ public class MemberApiController {
                   messageService.getMessage("super_admin.admin.delete.failure");
     }
 
-    // PRE_ADMIN 목록 가져오기
+    // PRE_USER 회원 정보 목록 가져오기
     @GetMapping("/pre-user")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public PageResponseDTO<PreUserDTO> getPreUserList(@RequestParam(defaultValue = "1") Integer page,
@@ -268,7 +268,7 @@ public class MemberApiController {
                 messageService.getMessage("super_admin.user_course.update.failure");
     }
 
-    // USER 삭제
+    // USER 강제 탈퇴(소속 캠퍼스, 권한, 회원 상태 변경)
     @DeleteMapping("/user")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public String deleteUser(Long userNo) {
