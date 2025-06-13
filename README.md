@@ -84,7 +84,7 @@
 ### 📝 권한
 <table>
  <tr>
-  <th>분류</th>
+  <th>구분</th>
   <th>권한</th>
   <th>설명</th>
  </tr>
@@ -289,7 +289,7 @@
 
 ## 📋 로깅 전략
 
-### 환경별 로그 레벨 설정
+### - 환경별 로그 레벨 설정
 | 구분 | 개발 환경 | 운영 환경 |
 |------|-----------|-----------|
 | **애플리케이션 로그** (`kr.sesaclink`) | `DEBUG` | `INFO` |
@@ -298,11 +298,11 @@
 | **Spring Security** | `DEBUG` | `WARN` |
 | **Spring Framework** | `INFO` | `WARN` |
 
-### 로그 파일 구조
+### - 로그 파일 구조
 ```
 logs/
-├── spring-info.log                    # 시스템 INFO 이상 로그 (운영환경)
-├── spring-warn.log                    # 시스템 WARN 이상 로그 (개발환경)
+├── spring-info.log                   # 시스템 INFO 이상 로그 (운영 환경)
+├── spring-warn.log                   # 시스템 WARN 이상 로그 (개발 환경)
 ├── debug/
 │   └── spring-app-debug.log          # 애플리케이션 DEBUG 로그
 ├── info/
@@ -313,7 +313,7 @@ logs/
     └── spring-app-error.log          # 애플리케이션 ERROR 로그
 ```
 
-### 주요 특징
+### - 주요 특징
 - **환경별 차등 로깅** : 개발 환경에서는 상세한 디버깅 정보, 운영 환경에서는 필수 정보만 기록
 - **일별 로그 롤링** : 매일 자정에 로그 파일 분할 및 GZ 압축 저장
 - **레벨별 파일 분리** : DEBUG, INFO, WARN, ERROR 각각 별도 파일로 관리
