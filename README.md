@@ -266,7 +266,11 @@
  </tr>
  <tr>
   <td>PRE_ADMIN -> 예비 운영진 (소속 캠퍼스 X)</td>
+ </tr>
+ <tr>
   <td>ADMIN -> 운영진</td>
+ </tr>
+ <tr>
   <td>JOB_COORDINATOR -> 잡코디네이터</td>
  </tr>
  <tr>
