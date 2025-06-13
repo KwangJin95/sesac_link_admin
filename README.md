@@ -258,21 +258,17 @@
 
 ## ✨ 권한별 기능 정리
 
-### 📝 범례
+### 📝 권한
 <table>
  <tr>
-  <th rowspan="4">운영자</th>
- </tr>
- <tr>
+  <td rowspan="4">운영자</td>
   <td>SUPER_ADMIN -> 관리자 (캠퍼스별 1명)</td>
   <td>PRE_ADMIN -> 예비 운영진 (소속 캠퍼스 X)</td>
   <td>ADMIN -> 운영진</td>
   <td>JOB_COORDINATOR -> 잡코디네이터</td>
  </tr>
  <tr>
-  <th rowspan="2">학생</th>
- </tr>
- <tr>
+  <td rowspan="2">학생</td>
   <td>PRE_USER -> 예비 학생 (소속 캠퍼스 X)</td>
   <td>USER -> 학생</td>
  </tr>
