@@ -267,28 +267,28 @@
  </tr>
  <tr>
   <th rowspan="4">운영자</th>
-  <th text-align="left">SUPER_ADMIN</th>
+  <td text-align="left"><b>SUPER_ADMIN</b></td>
   <td>관리자 (캠퍼스별 1명)</td>
  </tr>
  <tr>
-  <th text-align="left">PRE_ADMIN</th>
+  <td text-align="left"><b>PRE_ADMIN</b></td>
   <td>예비 운영진 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <th text-align="left">ADMIN</th>
+  <td text-align="left"><b>ADMIN</b></td>
   <td>운영진</td>
  </tr>
  <tr>
-  <thth text-align="left">JOB_COORDINATOR</th>
+  <td text-align="left"><b>JOB_COORDINATOR</b></td>
   <td>잡코디네이터</td>
  </tr>
  <tr>
   <th rowspan="2">학생</th>
-  <th text-align="left">PRE_USER</th>
+  <td text-align="left"><b>PRE_USER</b></td>
   <td>예비 학생 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <th text-align="left">USER</th>
+  <td text-align="left"><b>USER</b></td>
   <td>학생</td>
  </tr>
 </table>
