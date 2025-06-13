@@ -138,7 +138,8 @@
   <th>JOB_COORDINATOR</th>
  </tr>
  <tr>
-  <td  colspan="4" text-align="left"><b>예비 운영진 (PRE_ADMIN)</b></td>
+  <td text-align="left"><b>예비 운영진 (PRE_ADMIN)</b></td>
+  <td colspan="3"></td>
  </tr>
  <tr>
   <td>목록 조회 (회원 상태별 필터링 + 검색)</td>
@@ -159,7 +160,8 @@
   <td>❌</td>
  </tr>
  <tr>
-  <td  colspan="4" text-align="left"><b>소속 캠퍼스 운영진 (ADMIN, JOB_COORDINATOR)</b></td>
+  <td text-align="left"><b>소속 캠퍼스 운영진 (ADMIN, JOB_COORDINATOR)</b></td>
+  <td colspan="3"></td>
  </tr>
  <tr>
   <td>목록 조회 (권한별 필터링 + 검색)</td>
@@ -192,7 +194,8 @@
   <td>❌</td>
  </tr>
  <tr>
-  <td  colspan="4" text-align="left"><b>예비 학생 (PRE_USER)</b></td>
+  <td text-align="left"><b>예비 학생 (PRE_USER)</b></td>
+  <td colspan="3"></td>
  </tr>
  <tr>
   <td>목록 조회 (회원 상태별 필터링 + 검색)</td>
@@ -213,7 +216,8 @@
   <td>❌</td>
  </tr>
  <tr>
-  <td  colspan="4" text-align="left"><b>소속 캠퍼스 학생 (USER)</b></td>
+  <td text-align="left"><b>소속 캠퍼스 학생 (USER)</b></td>
+  <td colspan="3"></td>
  </tr>
  <tr>
   <td>목록 조회 (강좌별 필터링 + 검색)</td>
@@ -246,7 +250,6 @@
   <td>❌ </td>
  </tr>
 </table>
-
 
 ### 🏢 공간 관리 기능
 
