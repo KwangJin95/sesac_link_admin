@@ -1,4 +1,4 @@
-# SeSAC LINK Admin (SeSAC 학생 지원 플랫폼 - 운영자용)
+# SeSAC Link Admin (SeSAC 학생 지원 플랫폼 - 운영자용)
 
 ## 📌 프로젝트 개요
 * **기간** : 2025.03.05 ~ 진행중
