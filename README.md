@@ -261,24 +261,35 @@
 ### 📝 권한
 <table>
  <tr>
-  <td rowspan="4">운영자</td>
-  <td>SUPER_ADMIN -> 관리자 (캠퍼스별 1명)</td>
+  <th></th>
+  <th>권한</th>
+  <th>설명</th>
  </tr>
  <tr>
-  <td>PRE_ADMIN -> 예비 운영진 (소속 캠퍼스 X)</td>
+  <th rowspan="4">운영자</th>
+  <th>SUPER_ADMIN</th>
+  <td>관리자 (캠퍼스별 1명)</td>
  </tr>
  <tr>
-  <td>ADMIN -> 운영진</td>
+  <th>PRE_ADMIN</th>
+  <td>예비 운영진 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <td>JOB_COORDINATOR -> 잡코디네이터</td>
+  <th>ADMIN</th>
+  <td>운영진</td>
+ </tr>
+ <tr>
+  <th>JOB_COORDINATOR</th>
+  <td>잡코디네이터</td>
  </tr>
  <tr>
   <td rowspan="2">학생</td>
-  <td>PRE_USER -> 예비 학생 (소속 캠퍼스 X)</td>
+  <th>PRE_USER</th>
+  <td>예비 학생 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <td>USER -> 학생</td>
+  <th>USER</th>
+  <td>학생</td>
  </tr>
 </table>
 
