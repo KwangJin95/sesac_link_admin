@@ -52,8 +52,6 @@
 
 ---
 
-
-
 ## 🏗️ 시스템 아키텍처
 
 <img src="https://github.com/user-attachments/assets/fb693ee3-db66-45d8-9791-924b6a945783" alt="system_architecture" width="700"/>
@@ -70,12 +68,6 @@
 - 👉 [ERD Cloud에서 보기](https://www.erdcloud.com/d/oWYh4L629Kzbut6Ei)
 
 <img src="https://github.com/user-attachments/assets/5e5ef095-17f0-48cd-9201-a9eeebd7f596" alt="ERD" width="700"/>
-
----
-
-## ⚙️ 기능 흐름도
-- 공통
-![Image](https://github.com/user-attachments/assets/8edadfae-6c54-45b6-8148-4ccfba605fdb)
 
 ---
 
@@ -284,6 +276,12 @@
 | 시간/예약 상태별 예약 현황 조회 및 Excel 다운로드 | ✅ | ✅ | ✅ (본인 대상 예약만) |
 | 예약 등록 | ✅ | ✅ | ✅ |
 | 예약 상태 변경 | ✅ | ✅ | ✅ (본인 대상 예약만) |
+
+---
+
+## ⚙️ 기능 흐름도
+- 공통
+![Image](https://github.com/user-attachments/assets/8edadfae-6c54-45b6-8148-4ccfba605fdb)
 
 ---
 
