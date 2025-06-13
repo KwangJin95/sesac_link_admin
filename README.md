@@ -261,34 +261,34 @@
 ### 📝 권한
 <table>
  <tr>
-  <th></th>
+  <th>분류</th>
   <th>권한</th>
   <th>설명</th>
  </tr>
  <tr>
   <th rowspan="4">운영자</th>
-  <th>SUPER_ADMIN</th>
+  <th text-align="left">SUPER_ADMIN</th>
   <td>관리자 (캠퍼스별 1명)</td>
  </tr>
  <tr>
-  <th>PRE_ADMIN</th>
+  <th text-align="left">PRE_ADMIN</th>
   <td>예비 운영진 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <th>ADMIN</th>
+  <th text-align="left">ADMIN</th>
   <td>운영진</td>
  </tr>
  <tr>
-  <th>JOB_COORDINATOR</th>
+  <thth text-align="left">JOB_COORDINATOR</th>
   <td>잡코디네이터</td>
  </tr>
  <tr>
-  <td rowspan="2">학생</td>
-  <th>PRE_USER</th>
+  <th rowspan="2">학생</th>
+  <th text-align="left">PRE_USER</th>
   <td>예비 학생 (소속 캠퍼스 X)</td>
  </tr>
  <tr>
-  <th>USER</th>
+  <th text-align="left">USER</th>
   <td>학생</td>
  </tr>
 </table>
