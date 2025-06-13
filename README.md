@@ -293,8 +293,7 @@
   <th>JOB_COORDINATOR</th>
  </tr>
  <tr>
-  <td><b>예비 운영진 (PRE_ADMIN)</b></td>
-  <td colspan="3"></td>
+  <td  colspan="4" text-align="left"><b>예비 운영진 (PRE_ADMIN)</b></td>
  </tr>
 </table>
 
