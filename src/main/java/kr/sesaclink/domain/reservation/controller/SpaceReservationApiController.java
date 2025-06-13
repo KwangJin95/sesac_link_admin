@@ -42,16 +42,6 @@ public class SpaceReservationApiController {
         return spaceReservationService.getSpaceReservationList(spaceNo, startDate, endDate, statusName);
     }
 
-    // 공간 예약 목록 전체 갯수
-    @GetMapping("/count")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'JOB_COORDINATOR')")
-    public Long getSpaceReservationListCount(Integer spaceNo,
-                                             LocalDate resDateStart,
-                                             LocalDate resDateEnd,
-                                             String statusName) {
-        return spaceReservationService.getSpaceReservationListCount(spaceNo, resDateStart, resDateEnd, statusName);
-    }
-
     // 공간 예약 등록
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
