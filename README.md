@@ -277,9 +277,23 @@
 
 ### 👤 회원 관리 기능
 
-| 회원 유형 | SUPER_ADMIN | ADMIN | JOB_COORDINATOR |
+<table>
+ <tr>
+  <th>대상</th>
+  <th>SUPER_ADMIN</th>
+  <th>ADMIN</th>
+  <th>JOB_COORDINATOR</th>
+ </tr>
+ <tr>
+  <td><b>예비 운영진 (PRE_ADMIN)</b></td>
+  <td colspan="3"></td>
+  
+ </tr>
+</table>
+
+|  |  |  |  |
 |-----------|-------------|-------|-----------------|
-| **예비 운영진 (PRE_ADMIN)** ||
+|  ||
 | 목록 조회 (상태별 필터링 + 검색) | ✅ | ❌ | ❌ |
 | 계정 정보 상세 조회 | ✅ | ❌ | ❌ |
 | 가져오기 (캠퍼스/권한/상태 변경) | ✅ | ❌ | ❌ |
