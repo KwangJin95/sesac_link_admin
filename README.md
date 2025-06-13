@@ -22,6 +22,19 @@
 ## 🖥️ 서비스 미리보기
 
 
+
+---
+
+## 🛠️ 기술스택
+
+| 영역 | 기술 |
+|------|------|
+| **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA, QueryDSL |
+| **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
+| **Database** | AWS RDS (MySQL) |
+| **DevOps** | AWS EC2, S3, Git |
+| **Logging** | Log4j2 (레벨별/날짜별 파일 저장) |
+
 ---
 
 ## 🎯 주요 기능
@@ -39,17 +52,7 @@
 
 ---
 
-## 🛠️ 기술스택
 
-| 영역 | 기술 |
-|------|------|
-| **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA, QueryDSL |
-| **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
-| **Database** | AWS RDS (MySQL) |
-| **DevOps** | AWS EC2, S3, Git |
-| **Logging** | Log4j2 (레벨별/날짜별 파일 저장) |
-
----
 
 ## 🏗️ 시스템 아키텍처
 
@@ -283,6 +286,39 @@
 | 예약 상태 변경 | ✅ | ✅ | ✅ (본인 대상 예약만) |
 
 ---
+
+## 📋 로깅 전략
+
+### 환경별 로그 레벨 설정
+| 구분 | 개발 환경 | 운영 환경 |
+|------|-----------|-----------|
+| **애플리케이션 로그** (`kr.sesaclink`) | `DEBUG` | `INFO` |
+| **시스템 로그** (Root Logger) | `INFO` | `WARN` |
+| **Hibernate SQL** | `DEBUG` | `OFF` |
+| **Spring Security** | `DEBUG` | `WARN` |
+| **Spring Framework** | `INFO` | `WARN` |
+
+### 로그 파일 구조
+```
+logs/
+├── spring-info.log                    # 시스템 INFO 이상 로그 (운영환경)
+├── spring-warn.log                    # 시스템 WARN 이상 로그 (개발환경)
+├── debug/
+│   └── spring-app-debug.log          # 애플리케이션 DEBUG 로그
+├── info/
+│   └── spring-app-info.log           # 애플리케이션 INFO 로그
+├── warn/
+│   └── spring-app-warn.log           # 애플리케이션 WARN 로그
+└── error/
+    └── spring-app-error.log          # 애플리케이션 ERROR 로그
+```
+
+### 주요 특징
+- **환경별 차등 로깅** : 개발 환경에서는 상세한 디버깅 정보, 운영 환경에서는 필수 정보만 기록
+- **일별 로그 롤링** : 매일 자정에 로그 파일 분할 및 GZ 압축 저장
+- **레벨별 파일 분리** : DEBUG, INFO, WARN, ERROR 각각 별도 파일로 관리
+- **SQL 로그 제어** : 개발 시에만 Hibernate SQL 쿼리 로그 활성화
+- **성능 최적화** : 운영 환경에서 불필요한 로그 비활성화로 성능 향상
 
 ## 📱 화면 및 설명
 
