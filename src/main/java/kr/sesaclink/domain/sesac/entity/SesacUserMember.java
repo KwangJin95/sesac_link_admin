@@ -28,7 +28,7 @@ public class SesacUserMember {
     private String email;
 
     @Column(nullable = false, length = 15)
-    private String phoneNumber;
+    private String phone;
 
     @Column(nullable = false)
     private String address;
