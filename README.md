@@ -32,7 +32,7 @@
 | **Backend** | Java 17, Spring Boot, Spring Security, Spring Data JPA, QueryDSL |
 | **Frontend** | Thymeleaf, HTML5, CSS3, JavaScript, Tailwind CSS |
 | **Database** | AWS RDS (MySQL) |
-| **DevOps** | AWS EC2, S3, Git |
+| **DevOps** | AWS EC2, S3, Git, GitHub |
 | **Logging** | Log4j2 (레벨별/날짜별 파일 저장) |
 
 ---
