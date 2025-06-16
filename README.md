@@ -47,8 +47,12 @@
   
 ![Image](https://github.com/user-attachments/assets/5f53e3e2-3568-4e98-a449-e46e31bd614f)
 
+
 ### 🏢 공간 관리
 - **공간 정보 관리**
+
+![Image](https://github.com/user-attachments/assets/b9f331a3-b4eb-4c5f-874b-a8b10f92e95e)
+
 
 ### 📅 예약 관리  
 - **공간 예약 관리**
