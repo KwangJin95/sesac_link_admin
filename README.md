@@ -56,12 +56,10 @@
 
 ### 📅 예약 관리  
 - **공간 예약 관리**
-
+> 작성 예정입니다.
   
 - **상담 예약 관리**
-
-
-
+> 작성 예정입니다.
 
 ---
 
@@ -320,7 +318,8 @@
 ---
 
 ## ⚙️ 기능 흐름도
-> 추후 업데이트 예정입니다.
+
+> 작성 예정입니다.
 
 ---
 
@@ -361,23 +360,7 @@ logs/
 
 ## 📱 화면 및 설명
 
-<table>
-  <tr>
-    <th>기능</th>
-    <th>화면</th>
-  </tr>
-  <tr>
-    <td><b>채널</b></td>
-    <td width="85%"><img src="https://github.com/user-attachments/assets/66147753-aab9-46f4-b5f3-b9f5013285a0"></td>
-  </tr>
-</table>
-
- - 채널 프로필 사진 또는 이름 클릭 시 이동되는 페이지
- - 내 채널인 경우 프로필 사진 클릭 시 비밀번호 확인 및 회원 정보 수정 페이지로 이동
- - 채널 자세히 알아보기 클릭 시 채널 세부 정보 창을 띄워 채널 URL, 구독자 수, 동영상 개수, 조회수, 가입일 등의 정보 조회 가능
- - 동영상 관리 버튼 클릭 시 채널 콘텐츠 화면으로 이동
- - 만들기 버튼 클릭 시 동영상 업로드 창을 띄움
- - 동영상 섬네일 또는 제목 클릭 시 해당 동영상 시청 페이지로 이동
+> 작성 예정입니다.
 
 ---
 
@@ -389,72 +372,7 @@ logs/
 
 ## 📁 패키지 구조
 
-```
-pom.xml
-fakeTube.sql                            : DB 관련 SQL문 작성 파일
-└─src
-     └─main
-         ├─java
-         │   └─com
-         │       └─spring
-         │           └─ft
-         │               ├─comments     : 댓글 service 인터페이스 및 댓글 VO 클래스
-         │               │   └─impl     : 댓글 service 구현 클래스 및 댓글 DAO 클래스
-         │               ├─common       : 페이징 클래스
-         │               ├─likes        : 좋아요 service 인터페이스 및 좋아요 VO 클래스
-         │               │   └─impl     : 좋아요 service 구현 클래스 및 좋아요 DAO 클래스
-         │               ├─members      : 회원, 이메일 인증 service 인터페이스 및 회원, 구독 VO 클래스
-         │               │   └─impl     : 회원 service 구현 클래스 및 회원 DAO 클래스
-         │               ├─qna          : 문의 service 인터페이스 및 문의, 페이징 VO 클래스
-         │               │   └─impl     : 문의 service 구현 클래스 및 문의 DAO 클래스
-         │               ├─sub          : 구독 service 인터페이스 및 구독 VO 클래스
-         │               │   └─impl     : 구독 service 구현 클래스 및 구독 DAO 클래스
-         │               ├─video        : 동영상 service 인터페이스 및 동영상, 채널 VO 클래스
-         │               │   └─impl     : 동영상 service 구현 클래스 및 동영상 DAO 클래스
-         │               └─view         : controller
-         │                   ├─comments
-         │                   ├─likes
-         │                   ├─members
-         │                   ├─myChannel
-         │                   ├─qna
-         │                   └─video
-         │                           
-         ├─resources
-         │   │   applicationContext.xml : root 컨테이너 설정 파일
-         │   │   log4j.xml              : log4j 설정 파일
-         │   │   mybatis-config.xml     : mybatis 설정 파일
-         │   └─mappings                 : mybatis mapper 파일
-         │       ├─comments   
-         │       ├─likes
-         │       ├─members
-         │       ├─qna
-         │       ├─sub
-         │       └─video
-         │               
-         └─webapp                       : 각종 jsp 파일
-             ├─common                   : 각종 jsp 파일
-             ├─iconImage                : 아이콘 이미지 파일
-             ├─profileImage             : 계정 이미지 파일
-             ├─resources
-             │   ├─css                  : css 파일
-             │   └─images
-             │       ├─icon             : 아이콘 이미지 파일
-             │       └─members          : 기본 계정 이미지 파일
-             ├─thumimgs                 : 동영상 섬네일 이미지 파일
-             ├─videos                   : 동영상 파일
-             └─WEB-INF
-                 │   web.xml
-                 ├─config               : servlet 컨테이너 설정 파일
-                 ├─jsp                  : 각종 jsp 파일
-                 │   ├─comments
-                 │   ├─frame
-                 │   ├─member
-                 │   ├─myChannel
-                 │   ├─qna
-                 │   └─video
-                 └─views                : 각종 jsp 파일
-
-```
+> 작성 예정입니다.
 
 ---
 ## 🔧 향후 개선 방향
