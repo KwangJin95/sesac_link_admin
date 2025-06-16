@@ -35,24 +35,23 @@
 ## 🎥 서비스 미리보기
 
 ### 👥 회원 관리
-- 소속 캠퍼스 운영진 관리
-- 소속 캠퍼스 학생 관리  
-- 예비 학생 가져오기 (정식 학생 등록)
-
 <table>
   <tr>
     <th>기능</th>
     <th>화면</th>
   </tr>
   <tr>
-    <td><b>대시보드</b></td>
+    <td><b>소속 캠퍼스 운영진 관리</b></td>
+    <td width="85%"><img src="https://github.com/user-attachments/assets/a6bcd432-7895-4e75-b869-e9e38c5e5b11"></td>
+  </tr>
+  <tr>
+    <td><b>소속 캠퍼스 학생 관리</b></td>
     <td width="85%"><img src="스크린샷링크"></td>
   </tr>
   <tr>
-    <td><b>회원 관리</b></td>
+    <td><b>예비 학생 관리(소속 캠퍼스, 권한, 회원 상태 변경)</b></td>
     <td width="85%"><img src="스크린샷링크"></td>
   </tr>
-  <!-- 계속... -->
 </table>
 
 ### 🏢 공간 관리
