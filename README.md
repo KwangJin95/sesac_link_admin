@@ -35,13 +35,16 @@
 ## 🎥 서비스 미리보기
 
 ### 👥 회원 관리
-- **소속 캠퍼스운영진 관리**
+- **소속 캠퍼스 운영진 관리**
+  
 ![Image](https://github.com/user-attachments/assets/a6bcd432-7895-4e75-b869-e9e38c5e5b11)
 
 - **소속 캠퍼스 학생 관리**
+  
 ![Image](https://github.com/user-attachments/assets/72e58bfe-90d0-4f3a-ae13-132b13d0fda7)
 
 - **예비 학생 관리** - 소속 캠퍼스/권한/회원 상태 변경
+  
 - ![Image](https://github.com/user-attachments/assets/5f53e3e2-3568-4e98-a449-e46e31bd614f)
 
 ### 🏢 공간 관리
