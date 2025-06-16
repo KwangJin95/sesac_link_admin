@@ -49,7 +49,7 @@
     <td width="85%"><img src="https://github.com/user-attachments/assets/72e58bfe-90d0-4f3a-ae13-132b13d0fda7"></td>
   </tr>
   <tr>
-    <td><b>예비 학생 관리<br><br>소속 캠퍼스 / 권한 /<br>회원 상태 변경)</b></td>
+    <td><b>예비 학생 관리<br><br>소속 캠퍼스 /<br>권한 /<br>회원 상태 변경)</b></td>
     <td width="85%"><img src="https://github.com/user-attachments/assets/5f53e3e2-3568-4e98-a449-e46e31bd614f"></td>
   </tr>
 </table>
