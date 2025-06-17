@@ -173,6 +173,8 @@ export async function onEmailCodeSendBtnClick(event, time) {
     // 인증 코드 전송 및 받아옴
     sendEmailVerifyCode(emailInput.value.trim())
         .then(data => {
+            // 수정 필요
+            alert(data);
             setEmailCode(data);
         })
         .catch(e => console.log(e));
