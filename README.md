@@ -61,7 +61,8 @@
 
   
 - **상담 예약 관리**
-> 작성 예정입니다.
+
+![Image](https://github.com/user-attachments/assets/2d263dc8-2d76-49ff-952a-e8e712553db6)
 
 ---
 
