@@ -373,9 +373,174 @@ logs/
 
 ---
 
-## 📁 패키지 구조
+## 📦 패키지 구조
 
-> 작성 예정입니다.
+### 📁 전체 구조 개요
+
+```
+src/main/java/kr/sesaclink/
+├── domain/                            # 도메인별 비즈니스 로직
+├── global/                            # 전역 설정 및 공통 기능
+└── SesacLinkAdminApplication.java
+```
+
+### 🏗️ 아키텍처 패턴
+
+본 프로젝트는 **Domain-Driven Design (DDD)** 와 **레이어드 아키텍처**를 기반으로 구성되어 있습니다.
+
+### 레이어 구조
+- **Controller Layer** : HTTP 요청 처리 및 응답
+- **Service Layer** : 비즈니스 로직 처리
+- **Repository Layer** : 데이터 액세스
+- **Entity Layer** : 엔터티
+
+### 📂 도메인별 구조
+
+#### 1. Campus (캠퍼스)
+```
+campus/
+├── controller/     
+├── entity/         
+├── repository/     
+└── service/        
+```
+
+#### 2. Course (강좌)
+```
+course/
+├── controller/               
+├── dto/                    # 강좌 관련 DTO
+│
+├── entity/                   
+│   ├── Course.java         # 강좌 정보
+│   └── UserCourse.java     # 학생-강좌 매핑
+│
+├── repository/               
+└── service/                  
+```
+
+#### 3. Member (회원)
+```
+member/
+├── controller/
+│   ├── MemberController.java          # 회원 공통
+│   ├── MyMemberController.java        # 마이페이지
+│   ├── MemberApiController.java       # 회원 API
+│   ├── AdminMemberController.java     # 운영자 회원 관리
+│   └── EmailApiController.java        # 이메일 API
+│
+├── dto/                               # 회원 관련 DTO
+│
+├── entity/                          
+│   ├── MemberStatus.java              # 회원 상태
+│   ├── AdminAuth.java                 # 운영자 권한
+│   ├── AdminMember.java               # 운영자 회원 정보
+│   ├── UserAuth.java                  # 학생 권한
+│   └── UserMember.java                # 학생 회원 정보
+│
+├── repository/                      
+│   └── search/                        # 검색 기능(queryDsl)
+└── service/                         
+```
+
+#### 4. Reservation (예약)
+```
+reservation/
+├── controller/                                
+│   ├── AdviceReservationApiController.java     # 상담 예약 API
+│   ├── SpaceReservationApiController.java      # 공간 예약 API
+│   
+│
+│   └── ... (기타 컨트롤러들)
+│
+├── dto/                                        # 예약 관련 DTO
+│
+├── entity/
+│   ├── SpaceStatus.java                        # 공간 상태
+│   ├── Space.java                              # 공간 정보
+│   ├── ReservationStatus.java                  # 예약 상태
+│   ├── SpaceReservation.java                   # 공간 예약
+│   └── AdviceReservation.java                  # 상담 예약
+│
+├── repository/
+└── service/
+```
+
+#### 5. 기타 도메인들
+- **Notice**: 공지사항
+- **Notification**: 알림
+- **QnA**: QnA
+- **Sesac**: SeSAC 학생, 학생-강좌 매핑
+
+### 🌍 Global 패키지
+
+```
+global/
+├── config/                      # 설정 클래스들
+│   ├── RootConfig.java          # 루트 설정
+│   ├── S3Config.java            # AWS S3 설정
+│   └── WebConfig.java           # 웹 설정
+│
+├── dto/                         # 공통 DTO
+│   └── PageResponseDTO.java     # 페이징 응답
+│
+├── entity/                      # 공통 엔터티
+│   └── BaseEntity.java          # 기본 엔터티 (생성일/수정일)
+│
+├── exception/                   # 예외 처리 핸들러
+├── security/                    # 보안 설정
+├── service/                     # 공통 서비스 (메시지 등)
+└── util/                        # 유틸리티 클래스
+    ├── CustomFileUtil.java      # 파일 처리
+    └── S3Util.java              # S3 유틸리티
+```
+
+### 📁 Resources 구조
+
+```
+resources/
+├── application*.properties    # 환경별 설정 파일
+├── logger/                    # 로그 설정
+├── messages/                  # 메시지 국제화
+├── static/                    # 정적 리소스
+│   ├── images/                # 이미지 파일들
+│   └── js/                    # JavaScript 파일들
+│       ├── domain/            # 도메인별 JS
+│       └── global/            # 공통 JS
+└── templates/                 # Thymeleaf 템플릿
+    ├── admin/                 # 관리자 페이지
+    ├── layout/                # 레이아웃 템플릿
+    ├── my/                    # 마이페이지
+    └── reservation/           # 예약 관련 페이지
+```
+
+### 🧪 Test 구조
+
+```
+test/java/kr/sesaclink/
+├── repository/            # Repository 테스트
+└── service/               # Service 테스트
+```
+
+### 🔧 주요 기능별 파일 위치
+
+#### 인증/인가
+- **Spring Security 설정**: `global/security/CustomSecurityConfig.java`
+- **사용자 인증 서비스**: `global/security/CustomUserDetailService.java`
+- **관리자 인증**: `member/entity/AdminAuth.java`
+- **사용자 인증**: `member/entity/UserAuth.java`
+
+#### 파일 업로드
+- **파일 유틸리티**: `global/util/CustomFileUtil.java`
+- **S3 연동**: `global/util/S3Util.java`
+- **S3 설정**: `global/config/S3Config.java`
+
+#### 예외 처리
+- **글로벌 예외 핸들러**: `global/exception/ControllerExceptionHandler.java`
+
+#### 메시징
+- **이메일 서비스**: `member/service/EmailService.java`
+- **메시지 서비스**: `global/service/MessageService.java`
 
 ---
 ## 🔧 향후 개선 방향
