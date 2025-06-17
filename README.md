@@ -470,10 +470,10 @@ reservation/
 ```
 
 #### 5. 기타 도메인들
-- **Sesac**: SeSAC 학생, 학생-강좌 매핑
-- **Notice**: 공지사항
-- **Notification**: 알림
-- **QnA**: QnA
+- **Sesac** : SeSAC 학생, 학생-강좌 매핑
+- **Notice** : 공지사항
+- **Notification** : 알림
+- **QnA** : QnA
 
 ### 🌍 Global 패키지
 
