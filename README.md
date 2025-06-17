@@ -446,12 +446,13 @@ member/
 #### 4. Reservation (예약)
 ```
 reservation/
-├── controller/                                
-│   ├── AdviceReservationApiController.java     # 상담 예약 API
+├── controller/
+│   ├── SpaceController.java                    # 공간 관리
+│   ├── SpaceApiController.java                 # 공간 API
+│   ├── SpaceReservationController.java         # 공간 예약 관리
 │   ├── SpaceReservationApiController.java      # 공간 예약 API
-│   
-│
-│   └── ... (기타 컨트롤러들)
+│   ├── AdviceReservationController.java        # 상담 예약 관리
+│   └── AdviceReservationApiController.java     # 상담 예약 API
 │
 ├── dto/                                        # 예약 관련 DTO
 │
@@ -459,18 +460,18 @@ reservation/
 │   ├── SpaceStatus.java                        # 공간 상태
 │   ├── Space.java                              # 공간 정보
 │   ├── ReservationStatus.java                  # 예약 상태
-│   ├── SpaceReservation.java                   # 공간 예약
-│   └── AdviceReservation.java                  # 상담 예약
+│   ├── SpaceReservation.java                   # 공간 예약 정보
+│   └── AdviceReservation.java                  # 상담 예약 정보
 │
 ├── repository/
 └── service/
 ```
 
 #### 5. 기타 도메인들
+- **Sesac**: SeSAC 학생, 학생-강좌 매핑
 - **Notice**: 공지사항
 - **Notification**: 알림
 - **QnA**: QnA
-- **Sesac**: SeSAC 학생, 학생-강좌 매핑
 
 ### 🌍 Global 패키지
 
@@ -488,8 +489,9 @@ global/
 │   └── BaseEntity.java          # 기본 엔터티 (생성일/수정일)
 │
 ├── exception/                   # 예외 처리 핸들러
-├── security/                    # 보안 설정
+├── security/                    # 보안 설정 관련 클래스들
 ├── service/                     # 공통 서비스 (메시지 등)
+│
 └── util/                        # 유틸리티 클래스
     ├── CustomFileUtil.java      # 파일 처리
     └── S3Util.java              # S3 유틸리티
@@ -500,18 +502,21 @@ global/
 ```
 resources/
 ├── application*.properties    # 환경별 설정 파일
-├── logger/                    # 로그 설정
-├── messages/                  # 메시지 국제화
+├── logger/                    # 로그 설정 파일
+├── messages/                  # 응답 메시지 설정 파일
+│
 ├── static/                    # 정적 리소스
 │   ├── images/                # 이미지 파일들
+│   │
 │   └── js/                    # JavaScript 파일들
 │       ├── domain/            # 도메인별 JS
 │       └── global/            # 공통 JS
+│
 └── templates/                 # Thymeleaf 템플릿
-    ├── admin/                 # 관리자 페이지
     ├── layout/                # 레이아웃 템플릿
     ├── my/                    # 마이페이지
-    └── reservation/           # 예약 관련 페이지
+    ├── admin/                 # 운영자 회원 관리 페이지
+    └── reservation/           # 예약 관리 페이지
 ```
 
 ### 🧪 Test 구조
@@ -522,27 +527,8 @@ test/java/kr/sesaclink/
 └── service/               # Service 테스트
 ```
 
-### 🔧 주요 기능별 파일 위치
-
-#### 인증/인가
-- **Spring Security 설정**: `global/security/CustomSecurityConfig.java`
-- **사용자 인증 서비스**: `global/security/CustomUserDetailService.java`
-- **관리자 인증**: `member/entity/AdminAuth.java`
-- **사용자 인증**: `member/entity/UserAuth.java`
-
-#### 파일 업로드
-- **파일 유틸리티**: `global/util/CustomFileUtil.java`
-- **S3 연동**: `global/util/S3Util.java`
-- **S3 설정**: `global/config/S3Config.java`
-
-#### 예외 처리
-- **글로벌 예외 핸들러**: `global/exception/ControllerExceptionHandler.java`
-
-#### 메시징
-- **이메일 서비스**: `member/service/EmailService.java`
-- **메시지 서비스**: `global/service/MessageService.java`
-
 ---
+
 ## 🔧 향후 개선 방향
 - **기능 확장**: 공지사항, QnA, 채용정보, 알림 모듈 개발
 - **사용자 경험**: UI/UX 개선
